@@ -32,15 +32,27 @@ body{
         "Segoe UI",
         sans-serif;
 
+    background:#020711;
+
+    overflow-x:hidden;
+}
+
+/* Fixed background layer: keeps the movie collage stable while the page scrolls,
+   including on iPhone/Safari where body background positioning can behave differently. */
+body:before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:-2;
+
     background:
         linear-gradient(
             rgba(2,7,17,.38),
             rgba(2,7,17,.62)
         ),
         url("ChatGPT Image 25 Σεπ 2026, 02_15_11 μ.μ..png")
-        center/cover fixed no-repeat;
-
-    overflow-x:hidden;
+        center center / cover no-repeat;
 }
 
 body:after{
@@ -56,6 +68,19 @@ body:after{
             transparent 30%,
             rgba(0,0,0,.45) 100%
         );
+}
+
+/* iPhone: use the visual viewport for the collage instead of the page height. */
+@media (max-width:700px){
+    body:before{
+        background:
+            linear-gradient(
+                rgba(2,7,17,.34),
+                rgba(2,7,17,.66)
+            ),
+            url("ChatGPT Image 25 Σεπ 2026, 02_15_11 μ.μ..png")
+            center top / cover no-repeat;
+    }
 }
 
 button,
