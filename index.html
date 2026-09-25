@@ -1538,7 +1538,7 @@ async function loadPanayiotisCatalog(){
 
         const cached =
             localStorage.getItem(
-                "moviemind_panayiotis_catalog_v1"
+                "moviemind_panayiotis_catalog_v2"
             );
 
 
@@ -1565,7 +1565,7 @@ async function loadPanayiotisCatalog(){
     }catch(e){
 
         localStorage.removeItem(
-            "moviemind_panayiotis_catalog_v1"
+            "moviemind_panayiotis_catalog_v2"
         );
 
     }
@@ -1644,7 +1644,7 @@ async function loadPanayiotisCatalog(){
     try{
 
         localStorage.setItem(
-            "moviemind_panayiotis_catalog_v1",
+            "moviemind_panayiotis_catalog_v2",
             JSON.stringify(
                 PANAYIOTIS_CATALOG
             )
