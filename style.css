@@ -1,0 +1,391 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #f5f7ff;
+    background:
+        radial-gradient(circle at 50% 20%, #243b63 0%, #0b1224 35%, #03050c 75%);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* STAR FIELD */
+
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+    background-image:
+        radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px),
+        radial-gradient(circle, rgba(255,255,255,0.5) 1px, transparent 1px);
+    background-size: 140px 140px, 220px 220px;
+    background-position: 20px 30px, 80px 100px;
+}
+
+body::after {
+    opacity: 0.35;
+    transform: scale(1.4);
+}
+
+
+/* MAIN CONTAINER */
+
+.container {
+    width: min(900px, 92%);
+    margin: auto;
+    padding: 60px 0 30px;
+}
+
+
+/* HERO */
+
+.hero {
+    text-align: center;
+    margin-bottom: 45px;
+}
+
+.hero-badge {
+    display: inline-block;
+    padding: 8px 16px;
+    border: 1px solid rgba(150, 190, 255, 0.4);
+    border-radius: 30px;
+    color: #b9d5ff;
+    font-size: 13px;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+.hero h1 {
+    font-size: clamp(48px, 8vw, 82px);
+    line-height: 1;
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: -3px;
+}
+
+.hero h1 span {
+    display: block;
+    color: #9fc7ff;
+}
+
+.hero p {
+    max-width: 600px;
+    margin: 25px auto 0;
+    color: #aebbd0;
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+
+/* MAIN FORM */
+
+.recommendation-box {
+    background: rgba(10, 18, 35, 0.82);
+    border: 1px solid rgba(150, 180, 230, 0.18);
+    border-radius: 24px;
+    padding: 35px;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(12px);
+}
+
+.recommendation-box h2 {
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-size: 27px;
+}
+
+
+/* FORM */
+
+.form-section {
+    margin-bottom: 28px;
+}
+
+.form-section label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #e8efff;
+}
+
+.hint {
+    color: #8e9bb0;
+    font-size: 14px;
+    margin-top: -3px;
+    margin-bottom: 12px;
+}
+
+select,
+input {
+    width: 100%;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #34435e;
+    background: #111b30;
+    color: white;
+    font-size: 16px;
+    outline: none;
+    margin-bottom: 10px;
+}
+
+select:focus,
+input:focus {
+    border-color: #7ca9ff;
+    box-shadow: 0 0 0 3px rgba(124, 169, 255, 0.12);
+}
+
+
+/* BUTTON */
+
+#recommendButton {
+    width: 100%;
+    margin-top: 10px;
+    padding: 17px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #5b8def, #8fbcff);
+    color: #06101f;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+#recommendButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(100, 150, 255, 0.25);
+}
+
+#recommendButton:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+
+/* RESULTS */
+
+.results {
+    margin-top: 45px;
+}
+
+.results h2 {
+    text-align: center;
+    font-size: 30px;
+    margin-bottom: 25px;
+}
+
+.hidden {
+    display: none;
+}
+
+
+/* LOADING */
+
+.loading {
+    text-align: center;
+    padding: 35px;
+    color: #aebbd0;
+}
+
+.loader {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 20px;
+    border: 3px solid #34435e;
+    border-top-color: #8fbcff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* DEMO RESULT */
+
+.demo-message {
+    background: rgba(15, 26, 48, 0.9);
+    border: 1px solid rgba(140, 175, 230, 0.2);
+    border-radius: 18px;
+    padding: 25px;
+    line-height: 1.6;
+}
+
+.demo-message h3 {
+    margin-top: 0;
+    color: #b9d5ff;
+}
+
+
+/* FOOTER */
+
+footer {
+    text-align: center;
+    margin-top: 60px;
+    padding: 25px;
+    color: #68758b;
+    font-size: 13px;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .container {
+        width: 94%;
+        padding-top: 35px;
+    }
+
+    .hero h1 {
+        font-size: 48px;
+    }
+
+    .hero p {
+        font-size: 16px;
+    }
+
+    .recommendation-box {
+        padding: 22px;
+        border-radius: 18px;
+    }
+
+    .recommendation-box h2 {
+        font-size: 23px;
+    }
+
+}
+/* MOVIE RESULTS */
+
+#movieResults {
+    display: grid;
+    gap: 22px;
+}
+
+.movie-card {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 24px;
+    background: rgba(10, 18, 35, 0.88);
+    border: 1px solid rgba(140, 175, 230, 0.18);
+    border-radius: 20px;
+    padding: 18px;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.3);
+    transition: transform 0.25s, border-color 0.25s;
+}
+
+.movie-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(143, 188, 255, 0.4);
+}
+
+.movie-poster {
+    width: 150px;
+    height: 225px;
+    object-fit: cover;
+    border-radius: 12px;
+    background: #111b30;
+}
+
+.no-poster {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+}
+
+.movie-info {
+    padding: 5px 5px 5px 0;
+}
+
+.movie-number {
+    color: #8fbcff;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+.movie-info h3 {
+    margin: 0 0 7px;
+    font-size: 25px;
+    color: #f5f7ff;
+}
+
+.movie-meta {
+    color: #91a1bb;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.movie-overview {
+    color: #b9c5d8;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.match-reason {
+    padding: 13px 15px;
+    border-radius: 10px;
+    background: rgba(60, 90, 140, 0.12);
+    border-left: 3px solid #7ca9ff;
+    color: #cbd7ea;
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+.match-reason strong {
+    color: #b9d5ff;
+}
+
+.tmdb-link {
+    display: inline-block;
+    color: #9fc7ff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.tmdb-link:hover {
+    text-decoration: underline;
+}
+
+
+/* MOBILE MOVIE CARDS */
+
+@media (max-width: 600px) {
+
+    .movie-card {
+        grid-template-columns: 100px 1fr;
+        gap: 15px;
+        padding: 14px;
+    }
+
+    .movie-poster {
+        width: 100px;
+        height: 150px;
+    }
+
+    .movie-info h3 {
+        font-size: 19px;
+    }
+
+    .movie-overview {
+        font-size: 14px;
+    }
+
+}

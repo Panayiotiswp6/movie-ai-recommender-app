@@ -1,0 +1,1991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MovieMind AI</title>
+<meta name="description" content="MovieMind AI — personalized movie recommendations created by Panayiotis Kouzaris.">
+
+<style>
+*{box-sizing:border-box}
+
+html{
+    scroll-behavior:smooth
+}
+
+body{
+    margin:0;
+    min-height:100vh;
+    color:#fff;
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    background:
+        linear-gradient(
+            rgba(2,7,17,.38),
+            rgba(2,7,17,.62)
+        ),
+        url("ChatGPT Image 25 Σεπ 2026, 02_15_11 μ.μ..png")
+        center/cover fixed no-repeat;
+
+    overflow-x:hidden;
+}
+
+body:after{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:-1;
+
+    background:
+        radial-gradient(
+            ellipse at center,
+            transparent 30%,
+            rgba(0,0,0,.45) 100%
+        );
+}
+
+button,
+select,
+input{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.container{
+    width:min(1050px,calc(100% - 32px));
+    margin:auto;
+    padding:42px 0 70px;
+}
+
+
+/* =========================
+   MODE SWITCH
+========================= */
+
+.mode-switch{
+    position:fixed;
+    top:18px;
+    left:18px;
+    z-index:50;
+
+    display:flex;
+    gap:6px;
+
+    padding:6px;
+
+    border:1px solid rgba(90,170,255,.28);
+    border-radius:14px;
+
+    background:rgba(3,12,27,.82);
+
+    backdrop-filter:blur(18px);
+
+    box-shadow:
+        0 12px 35px rgba(0,0,0,.35);
+}
+
+.mode-button{
+    border:0;
+    border-radius:9px;
+
+    padding:10px 14px;
+
+    color:rgba(220,235,255,.65);
+    background:transparent;
+
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:.08em;
+}
+
+.mode-button.active{
+    color:#fff;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(45,135,255,.42),
+            rgba(30,80,180,.3)
+        );
+
+    box-shadow:
+        inset 0 0 0 1px rgba(100,185,255,.22);
+}
+
+
+/* =========================
+   MODE CONTENT
+========================= */
+
+.mode-content{
+    display:none;
+}
+
+.mode-content.active{
+    display:block;
+}
+
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+    text-align:center;
+    padding:58px 10px 32px;
+}
+
+.hero h1{
+    margin:18px 0 10px;
+
+    font-size:clamp(54px,10vw,104px);
+    line-height:.86;
+    letter-spacing:-.055em;
+    font-weight:950;
+
+    text-shadow:
+        0 10px 50px rgba(0,0,0,.55);
+}
+
+.hero h1 span{
+    display:block;
+
+    background:
+        linear-gradient(
+            180deg,
+            #fff 0%,
+            #8bd1ff 35%,
+            #398fff 100%
+        );
+
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.hero p{
+    max-width:650px;
+    margin:20px auto 0;
+
+    color:rgba(225,235,250,.78);
+
+    font-size:16px;
+    line-height:1.65;
+}
+
+.creator{
+    margin-top:16px;
+
+    color:rgba(230,239,250,.78);
+
+    font-size:15px;
+}
+
+.creator strong{
+    color:#62b9ff;
+}
+
+
+/* =========================
+   MAIN BOX
+========================= */
+
+.box{
+    padding:30px;
+
+    border:1px solid rgba(85,165,255,.28);
+    border-radius:22px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(3,15,31,.91),
+            rgba(4,17,35,.82)
+        );
+
+    box-shadow:
+        0 30px 80px rgba(0,0,0,.42);
+
+    backdrop-filter:blur(16px);
+}
+
+.box h2{
+    margin:0 0 24px;
+
+    font-size:
+        clamp(
+            25px,
+            4vw,
+            34px
+        );
+}
+
+
+/* =========================
+   AI FORM
+========================= */
+
+.form-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:18px;
+}
+
+.field label{
+    display:block;
+
+    margin-bottom:9px;
+
+    font-size:13px;
+    font-weight:700;
+}
+
+.field select,
+.field input{
+    width:100%;
+    min-height:50px;
+
+    padding:0 15px;
+
+    border:
+        1px solid
+        rgba(90,165,245,.28);
+
+    border-radius:10px;
+
+    outline:none;
+
+    color:#f2f7ff;
+
+    background:
+        rgba(3,14,29,.82);
+}
+
+.field select option{
+    background:#071426;
+    color:#fff;
+}
+
+.favorites{
+    margin-top:23px;
+}
+
+.favorites-title{
+    margin-bottom:10px;
+
+    font-size:14px;
+    font-weight:700;
+}
+
+.favorite-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:12px;
+}
+
+.find-button{
+    width:100%;
+
+    margin-top:25px;
+
+    padding:16px;
+
+    border:0;
+    border-radius:12px;
+
+    color:#fff;
+
+    font-weight:900;
+    letter-spacing:.08em;
+
+    background:
+        linear-gradient(
+            135deg,
+            #247fff,
+            #1749b8
+        );
+
+    box-shadow:
+        0 10px 35px
+        rgba(30,110,255,.25);
+}
+
+
+/* =========================
+   RESULTS
+========================= */
+
+.results{
+    margin-top:30px;
+}
+
+.loading{
+    padding:50px;
+
+    text-align:center;
+
+    border:
+        1px solid
+        rgba(85,165,255,.2);
+
+    border-radius:18px;
+
+    background:
+        rgba(3,15,31,.78);
+}
+
+.spinner{
+    width:38px;
+    height:38px;
+
+    margin:
+        0 auto 15px;
+
+    border:
+        3px solid
+        rgba(255,255,255,.15);
+
+    border-top-color:#54aaff;
+
+    border-radius:50%;
+
+    animation:
+        spin 1s linear infinite;
+}
+
+@keyframes spin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+.movie-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:18px;
+}
+
+.movie-card{
+    display:flex;
+
+    gap:16px;
+
+    padding:15px;
+
+    min-height:180px;
+
+    border:
+        1px solid
+        rgba(90,165,255,.2);
+
+    border-radius:16px;
+
+    background:
+        rgba(3,15,31,.82);
+}
+
+.movie-card img{
+    width:105px;
+    height:158px;
+
+    object-fit:cover;
+
+    border-radius:9px;
+
+    flex:none;
+}
+
+.movie-info{
+    min-width:0;
+}
+
+.movie-info h3{
+    margin:
+        0 0 7px;
+
+    font-size:19px;
+}
+
+.movie-meta{
+    color:#70bfff;
+
+    font-size:13px;
+
+    margin-bottom:9px;
+}
+
+.movie-rating{
+    display:inline-block;
+
+    margin-bottom:9px;
+
+    padding:
+        4px 8px;
+
+    border-radius:6px;
+
+    background:
+        rgba(255,193,7,.12);
+
+    color:#ffd76a;
+
+    font-size:12px;
+    font-weight:800;
+}
+
+.movie-reason{
+    color:
+        rgba(225,235,250,.72);
+
+    font-size:13px;
+    line-height:1.5;
+}
+
+
+/* =========================
+   PANAYIOTIS' PICKS
+========================= */
+
+.picks-header{
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:15px;
+
+    margin-bottom:25px;
+}
+
+.picks-header h2{
+    margin:0;
+}
+
+.picks-header select{
+    min-width:210px;
+
+    padding:12px 14px;
+
+    border:
+        1px solid
+        rgba(90,165,245,.3);
+
+    border-radius:10px;
+
+    color:#fff;
+
+    background:#071426;
+}
+
+.picks-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:18px;
+}
+
+.pick-card{
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    min-height:150px;
+
+    padding:12px;
+
+    border:
+        1px solid
+        rgba(90,165,255,.2);
+
+    border-radius:15px;
+
+    background:
+        rgba(3,15,31,.82);
+}
+
+.pick-poster{
+    width:92px;
+    height:138px;
+
+    object-fit:cover;
+
+    border-radius:8px;
+
+    flex:none;
+
+    background:#071426;
+}
+
+.pick-rank{
+    width:32px;
+    height:32px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    flex:none;
+
+    border-radius:50%;
+
+    background:
+        rgba(45,135,255,.2);
+
+    color:#70bfff;
+
+    font-size:11px;
+    font-weight:900;
+}
+
+.pick-info{
+    min-width:0;
+
+    flex:1;
+}
+
+.pick-title{
+    margin:0 0 5px;
+
+    font-size:16px;
+}
+
+.pick-year{
+    color:
+        rgba(220,235,255,.58);
+
+    font-size:12px;
+}
+
+.pick-tmdb{
+    display:inline-block;
+
+    margin-top:9px;
+
+    color:#70bfff;
+
+    font-size:11px;
+
+    text-decoration:none;
+}
+
+.pick-rating{
+    min-width:65px;
+
+    text-align:right;
+
+    color:#ffd76a;
+
+    font-size:13px;
+    font-weight:900;
+}
+
+
+/* =========================
+   ERROR
+========================= */
+
+.error-box{
+    padding:18px;
+
+    border-radius:12px;
+
+    background:
+        rgba(180,30,30,.18);
+
+    border:
+        1px solid
+        rgba(255,80,80,.25);
+
+    color:#ffb0b0;
+}
+
+
+/* =========================
+   TMDB
+========================= */
+
+.tmdb{
+    margin-top:40px;
+
+    text-align:center;
+
+    color:
+        rgba(220,235,255,.5);
+
+    font-size:11px;
+
+    line-height:1.5;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:800px){
+
+    .form-grid,
+    .favorite-grid,
+    .movie-grid,
+    .picks-grid{
+        grid-template-columns:1fr;
+    }
+
+    .picks-header{
+        align-items:stretch;
+
+        flex-direction:column;
+    }
+
+    .picks-header select{
+        width:100%;
+    }
+
+    .mode-switch{
+        position:relative;
+
+        top:auto;
+        left:auto;
+
+        width:max-content;
+
+        margin:
+            15px auto 0;
+    }
+
+    .hero{
+        padding-top:30px;
+    }
+}
+
+@media(max-width:500px){
+
+    .container{
+        width:
+            calc(100% - 20px);
+    }
+
+    .box{
+        padding:20px;
+    }
+
+    .pick-card{
+        align-items:flex-start;
+    }
+
+    .pick-rating{
+        min-width:55px;
+    }
+}
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     MODE SWITCH
+========================= -->
+
+<div class="mode-switch">
+
+    <button
+        class="mode-button active"
+        id="aiModeButton"
+        type="button"
+    >
+        AI RECOMMENDER
+    </button>
+
+    <button
+        class="mode-button"
+        id="picksModeButton"
+        type="button"
+    >
+        PANAYIOTIS' PICKS
+    </button>
+
+</div>
+
+
+<main class="container">
+
+
+<!-- =========================
+     HERO
+========================= -->
+
+<section class="hero">
+
+    <h1>
+        MOVIE
+        <span>MIND</span>
+    </h1>
+
+    <p>
+        Discover movies that match your taste,
+        powered by TMDB and AI.
+    </p>
+
+    <div class="creator">
+        Created by
+        <strong>
+            Panayiotis Kouzaris
+        </strong>
+    </div>
+
+</section>
+
+
+<!-- =========================
+     AI RECOMMENDER
+========================= -->
+
+<section
+    id="aiMode"
+    class="mode-content active"
+>
+
+    <div class="box">
+
+        <h2>
+            Find Your Movies
+        </h2>
+
+
+        <div class="form-grid">
+
+            <div class="field">
+
+                <label for="genre">
+                    Genre
+                </label>
+
+                <select id="genre">
+
+                    <option value="science fiction">
+                        Science Fiction
+                    </option>
+
+                    <option value="thriller">
+                        Thriller
+                    </option>
+
+                    <option value="action">
+                        Action
+                    </option>
+
+                    <option value="drama">
+                        Drama
+                    </option>
+
+                    <option value="comedy">
+                        Comedy
+                    </option>
+
+                    <option value="horror">
+                        Horror
+                    </option>
+
+                    <option value="romance">
+                        Romance
+                    </option>
+
+                    <option value="mystery">
+                        Mystery
+                    </option>
+
+                    <option value="adventure">
+                        Adventure
+                    </option>
+
+                    <option value="fantasy">
+                        Fantasy
+                    </option>
+
+                    <option value="any">
+                        Any
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="period">
+                    Release Period
+                </label>
+
+                <select id="period">
+
+                    <option value="2020-2027">
+                        2020–2027
+                    </option>
+
+                    <option value="2010-2020">
+                        2010–2020
+                    </option>
+
+                    <option value="2000-2010">
+                        2000–2010
+                    </option>
+
+                    <option value="1990-2000">
+                        1990–2000
+                    </option>
+
+                    <option value="1980-1990">
+                        1980–1990
+                    </option>
+
+                    <option value="before-1980">
+                        Before 1980
+                    </option>
+
+                    <option value="any">
+                        Any
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="plotTwist">
+                    Plot Twist
+                </label>
+
+                <select id="plotTwist">
+
+                    <option value="yes">
+                        Yes
+                    </option>
+
+                    <option value="no">
+                        No
+                    </option>
+
+                    <option value="any">
+                        Any
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <div class="favorites">
+
+            <div class="favorites-title">
+                Favorite Movies — up to 3
+            </div>
+
+
+            <div class="favorite-grid">
+
+                <div class="field">
+
+                    <input
+                        id="favorite1"
+                        placeholder="Movie title"
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <input
+                        id="favorite2"
+                        placeholder="Movie title"
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <input
+                        id="favorite3"
+                        placeholder="Movie title"
+                    >
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <button
+            class="find-button"
+            id="recommendButton"
+            type="button"
+        >
+            FIND MY MOVIES
+        </button>
+
+    </div>
+
+
+    <section
+        class="results"
+        id="results"
+        style="display:none"
+    >
+
+        <h2>
+            Your AI Recommendations
+        </h2>
+
+
+        <div
+            id="loading"
+            class="loading"
+            style="display:none"
+        >
+
+            <div class="spinner"></div>
+
+            <p>
+                MovieMind is searching the stars...
+            </p>
+
+        </div>
+
+
+        <div
+            id="movieResults"
+            class="movie-grid"
+            style="display:none"
+        ></div>
+
+    </section>
+
+</section>
+
+
+<!-- =========================
+     PANAYIOTIS' PICKS
+========================= -->
+
+<section
+    id="picksMode"
+    class="mode-content"
+>
+
+    <div class="box">
+
+        <div class="picks-header">
+
+            <h2 id="picksTitle">
+                Science Fiction
+            </h2>
+
+
+            <select id="pickCategory">
+
+                <option value="science-fiction">
+                    Science Fiction
+                </option>
+
+                <option value="thriller">
+                    Thriller
+                </option>
+
+                <option value="action">
+                    Action
+                </option>
+
+                <option value="drama">
+                    Drama
+                </option>
+
+                <option value="comedy">
+                    Comedy
+                </option>
+
+                <option value="horror">
+                    Horror
+                </option>
+
+                <option value="romance">
+                    Romance
+                </option>
+
+                <option value="mystery">
+                    Mystery
+                </option>
+
+                <option value="adventure">
+                    Adventure
+                </option>
+
+                <option value="fantasy">
+                    Fantasy
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div
+            id="picksGrid"
+            class="picks-grid"
+        ></div>
+
+    </div>
+
+</section>
+
+
+<div class="tmdb">
+
+    This product uses the TMDB API
+    but is not endorsed or certified by TMDB.
+
+</div>
+
+
+</main>
+
+
+<script>
+
+const API_URL =
+    "https://movie-mind-api.pankouzaris.workers.dev/";
+
+
+/* =========================
+   PICK GENRES
+========================= */
+
+const PICK_GENRES = {
+
+    "science-fiction": 878,
+
+    "thriller": 53,
+
+    "action": 28,
+
+    "drama": 18,
+
+    "comedy": 35,
+
+    "horror": 27,
+
+    "romance": 10749,
+
+    "mystery": 9648,
+
+    "adventure": 12,
+
+    "fantasy": 14
+
+};
+
+
+const PICK_GENRE_NAMES = {
+
+    "science-fiction":
+        "Science Fiction",
+
+    "thriller":
+        "Thriller",
+
+    "action":
+        "Action",
+
+    "drama":
+        "Drama",
+
+    "comedy":
+        "Comedy",
+
+    "horror":
+        "Horror",
+
+    "romance":
+        "Romance",
+
+    "mystery":
+        "Mystery",
+
+    "adventure":
+        "Adventure",
+
+    "fantasy":
+        "Fantasy"
+
+};
+
+
+let PANAYIOTIS_CATALOG = null;
+
+
+/* =========================
+   MODE SWITCH
+========================= */
+
+const aiButton =
+    document.getElementById(
+        "aiModeButton"
+    );
+
+const picksButton =
+    document.getElementById(
+        "picksModeButton"
+    );
+
+const aiMode =
+    document.getElementById(
+        "aiMode"
+    );
+
+const picksMode =
+    document.getElementById(
+        "picksMode"
+    );
+
+
+function showMode(mode){
+
+    const picks =
+        mode === "picks";
+
+
+    aiMode.classList.toggle(
+        "active",
+        !picks
+    );
+
+    picksMode.classList.toggle(
+        "active",
+        picks
+    );
+
+
+    aiButton.classList.toggle(
+        "active",
+        !picks
+    );
+
+    picksButton.classList.toggle(
+        "active",
+        picks
+    );
+
+
+    if(picks){
+
+        displayPicks();
+
+    }
+
+}
+
+
+aiButton.addEventListener(
+    "click",
+    () => showMode("ai")
+);
+
+
+picksButton.addEventListener(
+    "click",
+    () => showMode("picks")
+);
+
+
+/* =========================
+   AI RECOMMENDER
+========================= */
+
+async function findMovies(){
+
+    const results =
+        document.getElementById(
+            "results"
+        );
+
+    const loading =
+        document.getElementById(
+            "loading"
+        );
+
+    const out =
+        document.getElementById(
+            "movieResults"
+        );
+
+    const button =
+        document.getElementById(
+            "recommendButton"
+        );
+
+
+    results.style.display =
+        "block";
+
+    loading.style.display =
+        "block";
+
+    out.style.display =
+        "none";
+
+    out.innerHTML =
+        "";
+
+
+    button.disabled =
+        true;
+
+    button.textContent =
+        "SEARCHING...";
+
+
+    try{
+
+        const response =
+            await fetch(
+                API_URL,
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            genre:
+                                document
+                                    .getElementById(
+                                        "genre"
+                                    )
+                                    .value,
+
+                            period:
+                                document
+                                    .getElementById(
+                                        "period"
+                                    )
+                                    .value,
+
+                            plotTwist:
+                                document
+                                    .getElementById(
+                                        "plotTwist"
+                                    )
+                                    .value,
+
+                            favoriteMovies:[
+
+                                document
+                                    .getElementById(
+                                        "favorite1"
+                                    )
+                                    .value
+                                    .trim(),
+
+                                document
+                                    .getElementById(
+                                        "favorite2"
+                                    )
+                                    .value
+                                    .trim(),
+
+                                document
+                                    .getElementById(
+                                        "favorite3"
+                                    )
+                                    .value
+                                    .trim()
+
+                            ].filter(Boolean)
+
+                        })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(
+            !response.ok ||
+            !data.success
+        ){
+
+            throw new Error(
+                data.error ||
+                "MovieMind could not find recommendations."
+            );
+
+        }
+
+
+        out.innerHTML =
+            (data.recommendations || [])
+                .map(
+                    movie => `
+
+                        <article
+                            class="movie-card"
+                        >
+
+                            ${
+                                movie.poster_path
+
+                                ?
+
+                                `
+                                <img
+                                    src="https://image.tmdb.org/t/p/w342${movie.poster_path}"
+                                    alt="${escapeAttr(
+                                        movie.title
+                                    )}"
+                                    loading="lazy"
+                                >
+                                `
+
+                                :
+
+                                ``
+                            }
+
+
+                            <div
+                                class="movie-info"
+                            >
+
+                                <h3>
+                                    ${escapeHtml(
+                                        movie.title
+                                    )}
+                                </h3>
+
+
+                                <div
+                                    class="movie-meta"
+                                >
+                                    ${escapeHtml(
+                                        movie.year || ""
+                                    )}
+                                </div>
+
+
+                                <div
+                                    class="movie-rating"
+                                >
+                                    ★
+                                    ${Number(
+                                        movie.rating || 0
+                                    ).toFixed(1)}
+                                </div>
+
+
+                                <div
+                                    class="movie-reason"
+                                >
+                                    ${escapeHtml(
+                                        movie.reason || ""
+                                    )}
+                                </div>
+
+                            </div>
+
+                        </article>
+
+                    `
+                )
+                .join("");
+
+
+        out.style.display =
+            "grid";
+
+
+    }catch(e){
+
+        out.innerHTML = `
+
+            <div
+                class="error-box"
+                style="
+                    grid-column:1/-1
+                "
+            >
+                ${escapeHtml(
+                    e.message
+                )}
+            </div>
+
+        `;
+
+        out.style.display =
+            "grid";
+
+    }finally{
+
+        loading.style.display =
+            "none";
+
+        button.disabled =
+            false;
+
+        button.textContent =
+            "FIND MY MOVIES";
+
+    }
+
+}
+
+
+document
+    .getElementById(
+        "recommendButton"
+    )
+    .addEventListener(
+        "click",
+        findMovies
+    );
+
+
+/* =========================
+   LOAD PANAYIOTIS' CATALOG
+========================= */
+
+async function loadPanayiotisCatalog(){
+
+    if(PANAYIOTIS_CATALOG){
+
+        return PANAYIOTIS_CATALOG;
+
+    }
+
+
+    try{
+
+        const cached =
+            localStorage.getItem(
+                "moviemind_panayiotis_catalog_v1"
+            );
+
+
+        if(cached){
+
+            const parsed =
+                JSON.parse(cached);
+
+
+            if(
+                Array.isArray(parsed) &&
+                parsed.length
+            ){
+
+                PANAYIOTIS_CATALOG =
+                    parsed;
+
+                return parsed;
+
+            }
+
+        }
+
+    }catch(e){
+
+        localStorage.removeItem(
+            "moviemind_panayiotis_catalog_v1"
+        );
+
+    }
+
+
+    const grid =
+        document.getElementById(
+            "picksGrid"
+        );
+
+
+    grid.innerHTML = `
+
+        <div
+            class="loading"
+            style="
+                display:block;
+                grid-column:1/-1
+            "
+        >
+
+            <div
+                class="spinner"
+            ></div>
+
+            <p>
+                Loading Panayiotis' movies...
+            </p>
+
+        </div>
+
+    `;
+
+
+    const response =
+        await fetch(
+            API_URL,
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:
+                    JSON.stringify({
+                        action:
+                            "pickCatalog"
+                    })
+            }
+        );
+
+
+    const data =
+        await response.json();
+
+
+    if(
+        !response.ok ||
+        !data.success
+    ){
+
+        throw new Error(
+            data.error ||
+            "Could not load Panayiotis' Picks."
+        );
+
+    }
+
+
+    PANAYIOTIS_CATALOG =
+        data.movies || [];
+
+
+    try{
+
+        localStorage.setItem(
+            "moviemind_panayiotis_catalog_v1",
+            JSON.stringify(
+                PANAYIOTIS_CATALOG
+            )
+        );
+
+    }catch(e){}
+
+
+    return PANAYIOTIS_CATALOG;
+
+}
+
+
+/* =========================
+   DISPLAY PANAYIOTIS' PICKS
+========================= */
+
+async function displayPicks(){
+
+    const category =
+        document.getElementById(
+            "pickCategory"
+        ).value;
+
+
+    const grid =
+        document.getElementById(
+            "picksGrid"
+        );
+
+
+    const title =
+        document.getElementById(
+            "picksTitle"
+        );
+
+
+    title.textContent =
+        PICK_GENRE_NAMES[
+            category
+        ];
+
+
+    try{
+
+        const catalog =
+            await loadPanayiotisCatalog();
+
+
+        /*
+         * IMPORTANT:
+         *
+         * ALL Letterboxd movies are used.
+         *
+         * There is NO Top 100 limit.
+         */
+
+        let movies =
+            [...catalog];
+
+
+        /*
+         * Sort by Panayiotis'
+         * Letterboxd rating.
+         */
+
+        movies.sort(
+            (a,b) =>
+
+                Number(
+                    b.rating || 0
+                )
+
+                -
+
+                Number(
+                    a.rating || 0
+                )
+
+                ||
+
+                Number(
+                    b.year || 0
+                )
+
+                -
+
+                Number(
+                    a.year || 0
+                )
+
+                ||
+
+                String(
+                    a.title
+                ).localeCompare(
+                    String(
+                        b.title
+                    )
+                )
+        );
+
+
+        /*
+         * Filter by the selected
+         * TMDB genre.
+         *
+         * Movies can appear in
+         * multiple categories.
+         */
+
+        const genreId =
+            PICK_GENRES[
+                category
+            ];
+
+
+        movies =
+            movies.filter(
+                movie =>
+
+                    Array.isArray(
+                        movie.genre_ids
+                    )
+
+                    &&
+
+                    movie.genre_ids.includes(
+                        genreId
+                    )
+            );
+
+
+        if(
+            !movies.length
+        ){
+
+            grid.innerHTML = `
+
+                <div
+                    class="error-box"
+                    style="
+                        grid-column:1/-1
+                    "
+                >
+                    No rated movies were
+                    found in this category.
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        grid.innerHTML =
+            movies
+                .map(
+                    (movie,index) => {
+
+
+                        const poster =
+                            movie.poster_path
+
+                            ?
+
+                            `
+                            <img
+                                class="pick-poster"
+                                src="https://image.tmdb.org/t/p/w342${movie.poster_path}"
+                                alt="${escapeAttr(
+                                    movie.title
+                                )}"
+                                loading="lazy"
+                            >
+                            `
+
+                            :
+
+                            `
+                            <div
+                                class="pick-poster"
+                            ></div>
+                            `;
+
+
+                        const url =
+                            movie.tmdb_id
+
+                            ?
+
+                            `https://www.themoviedb.org/movie/${movie.tmdb_id}`
+
+                            :
+
+                            `https://www.themoviedb.org/search/movie?query=${encodeURIComponent(
+                                movie.title
+                            )}`;
+
+
+                        return `
+
+                            <article
+                                class="pick-card"
+                            >
+
+                                ${poster}
+
+
+                                <div
+                                    class="pick-rank"
+                                >
+                                    #${index + 1}
+                                </div>
+
+
+                                <div
+                                    class="pick-info"
+                                >
+
+                                    <h3
+                                        class="pick-title"
+                                    >
+                                        ${escapeHtml(
+                                            movie.title
+                                        )}
+                                    </h3>
+
+
+                                    <div
+                                        class="pick-year"
+                                    >
+                                        ${escapeHtml(
+                                            String(
+                                                movie.year || ""
+                                            )
+                                        )}
+                                    </div>
+
+
+                                    <a
+                                        class="pick-tmdb"
+                                        href="${escapeAttr(
+                                            url
+                                        )}"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        VIEW ON TMDB →
+                                    </a>
+
+                                </div>
+
+
+                                <div
+                                    class="pick-rating"
+                                >
+                                    ${Number(
+                                        movie.rating || 0
+                                    ).toFixed(1)}
+                                    / 5
+                                </div>
+
+                            </article>
+
+                        `;
+
+                    }
+                )
+                .join("");
+
+
+    }catch(e){
+
+        console.error(e);
+
+
+        grid.innerHTML = `
+
+            <div
+                class="error-box"
+                style="
+                    grid-column:1/-1
+                "
+            >
+
+                ${escapeHtml(
+                    e.message
+                )}
+
+                <br><br>
+
+                Refresh the page
+                and try again.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+document
+    .getElementById(
+        "pickCategory"
+    )
+    .addEventListener(
+        "change",
+        displayPicks
+    );
+
+
+/* =========================
+   SECURITY HELPERS
+========================= */
+
+function escapeHtml(v){
+
+    return String(
+        v ?? ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+function escapeAttr(v){
+
+    return String(
+        v ?? ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    );
+
+}
+
+</script>
+
+</body>
+</html>
