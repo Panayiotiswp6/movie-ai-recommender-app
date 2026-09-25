@@ -1,4 +1,4 @@
-const CACHE_NAME = "moviemind-v4";
+const CACHE_NAME = "moviemind-v6";
 
 const APP_SHELL = [
     "./",
