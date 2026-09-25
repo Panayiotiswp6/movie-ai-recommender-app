@@ -1523,7 +1523,7 @@ async function loadPanayiotisCatalog(){
             ></div>
 
             <p>
-                Loading Panayiotis' movies...
+                Loading Panayiotis' Picks...
             </p>
 
         </div>
@@ -1631,79 +1631,35 @@ async function displayPicks(){
          * There is NO Top 100 limit.
          */
 
-        let movies =
-            [...catalog];
-
-
         /*
-         * Sort by Panayiotis'
-         * Letterboxd rating.
-         */
-
-        movies.sort(
-            (a,b) =>
-
-                Number(
-                    b.rating || 0
-                )
-
-                -
-
-                Number(
-                    a.rating || 0
-                )
-
-                ||
-
-                Number(
-                    b.year || 0
-                )
-
-                -
-
-                Number(
-                    a.year || 0
-                )
-
-                ||
-
-                String(
-                    a.title
-                ).localeCompare(
-                    String(
-                        b.title
-                    )
-                )
-        );
-
-
-        /*
-         * Filter by the selected
-         * TMDB genre.
+         * The 10 movies in each category are
+         * the confirmed Letterboxd selections.
          *
-         * Movies can appear in
-         * multiple categories.
+         * A movie can appear in multiple categories.
          */
 
-        const genreId =
-            PICK_GENRES[
-                category
-            ];
+        let movies =
+            catalog.filter(
+                movie =>
+                    Array.isArray(
+                        movie.categories
+                    )
+                    &&
+                    movie.categories.includes(
+                        category
+                    )
+            );
 
+
+        /*
+         * Always keep the confirmed Letterboxd
+         * order and display exactly 10.
+         */
 
         movies =
-            movies.filter(
-                movie =>
-
-                    Array.isArray(
-                        movie.genre_ids
-                    )
-
-                    &&
-
-                    movie.genre_ids.includes(
-                        genreId
-                    )
+            movies.slice(
+                0,
+                10
             );
 
 
@@ -1887,6 +1843,8 @@ document
         "change",
         displayPicks
     );
+
+displayPicks();
 
 
 /* =========================
