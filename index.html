@@ -1117,6 +1117,8 @@ button{
 
 <script>
 
+const APP_VERSION = "2026-09-25-picks-v4";
+
 const API_URL =
     "https://movie-mind-api.pankouzaris.workers.dev/";
 
@@ -1538,7 +1540,7 @@ async function loadPanayiotisCatalog(){
 
         const cached =
             localStorage.getItem(
-                "moviemind_panayiotis_catalog_v2"
+                "moviemind_panayiotis_catalog_v4"
             );
 
 
@@ -1548,10 +1550,24 @@ async function loadPanayiotisCatalog(){
                 JSON.parse(cached);
 
 
-            if(
+            const catalogIsComplete =
                 Array.isArray(parsed) &&
-                parsed.length
-            ){
+                parsed.length >= 450 &&
+                [
+                    "Interstellar",
+                    "Everything Everywhere All at Once",
+                    "Predestination",
+                    "Coherence",
+                    "The Butterfly Effect",
+                    "Project Hail Mary"
+                ].every(title =>
+                    parsed.some(movie =>
+                        String(movie?.title || "") === title
+                    )
+                );
+
+
+            if(catalogIsComplete){
 
                 PANAYIOTIS_CATALOG =
                     parsed;
@@ -1560,12 +1576,17 @@ async function loadPanayiotisCatalog(){
 
             }
 
+
+            localStorage.removeItem(
+                "moviemind_panayiotis_catalog_v4"
+            );
+
         }
 
     }catch(e){
 
         localStorage.removeItem(
-            "moviemind_panayiotis_catalog_v2"
+            "moviemind_panayiotis_catalog_v4"
         );
 
     }
@@ -1638,13 +1659,40 @@ async function loadPanayiotisCatalog(){
 
 
     PANAYIOTIS_CATALOG =
-        data.movies || [];
+        Array.isArray(data.movies)
+            ? data.movies
+            : [];
+
+
+    const catalogIsComplete =
+        PANAYIOTIS_CATALOG.length >= 450 &&
+        [
+            "Interstellar",
+            "Everything Everywhere All at Once",
+            "Predestination",
+            "Coherence",
+            "The Butterfly Effect",
+            "Project Hail Mary"
+        ].every(title =>
+            PANAYIOTIS_CATALOG.some(movie =>
+                String(movie?.title || "") === title
+            )
+        );
+
+
+    if(!catalogIsComplete){
+
+        throw new Error(
+            "Panayiotis' Picks catalog is incomplete. Please refresh the page and try again."
+        );
+
+    }
 
 
     try{
 
         localStorage.setItem(
-            "moviemind_panayiotis_catalog_v2",
+            "moviemind_panayiotis_catalog_v4",
             JSON.stringify(
                 PANAYIOTIS_CATALOG
             )
@@ -2022,7 +2070,7 @@ function escapeAttr(v){
 <script>
 if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./service-worker.js")
+        navigator.serviceWorker.register("./service-worker.js?v=2026-09-25-picks-v4")
             .catch(error => {
                 console.error("MovieMind service worker registration failed:", error);
             });
