@@ -6,10 +6,7 @@
 
 <title>MovieMind AI</title>
 
-<meta
-    name="description"
-    content="MovieMind AI — personalized movie recommendations created by Panayiotis Kouzaris."
->
+<meta name="description" content="MovieMind AI — personalized movie recommendations created by Panayiotis Kouzaris.">
 
 <style>
 
@@ -24,9 +21,7 @@ html{
 body{
     margin:0;
     min-height:100vh;
-
     color:#fff;
-
     font-family:
         Inter,
         system-ui,
@@ -34,9 +29,7 @@ body{
         BlinkMacSystemFont,
         "Segoe UI",
         sans-serif;
-
     background:#020711;
-
     overflow-x:hidden;
 }
 
@@ -47,18 +40,15 @@ body{
 
 body:before{
     content:"";
-
     position:fixed;
-    inset:-3%;
-
+    inset:-4%;
     pointer-events:none;
-
     z-index:-3;
 
     background:
         linear-gradient(
-            rgba(2,7,17,.34),
-            rgba(2,7,17,.58)
+            rgba(2,7,17,.30),
+            rgba(2,7,17,.52)
         ),
         url("IMG_1106.png")
         center/cover no-repeat;
@@ -69,37 +59,49 @@ body:before{
             var(--bg-y, 0px),
             0
         )
-        scale(1.045);
+        scale(1.07);
 
     will-change:transform;
 
     transition:
-        transform .18s ease-out;
+        transform .12s ease-out;
 }
 
 
 body:after{
     content:"";
-
     position:fixed;
     inset:0;
-
     pointer-events:none;
-
     z-index:-2;
 
     background:
         radial-gradient(
             ellipse at center,
             transparent 25%,
-            rgba(0,0,0,.18) 58%,
-            rgba(0,0,0,.58) 100%
+            rgba(0,0,0,.12) 55%,
+            rgba(0,0,0,.52) 100%
         ),
         linear-gradient(
             115deg,
             rgba(15,75,150,.08),
             transparent 38%,
             rgba(20,115,210,.06)
+        );
+}
+
+
+.cinematic-depth-glow{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:-1;
+
+    background:
+        radial-gradient(
+            ellipse at 50% 45%,
+            rgba(40,125,220,.07),
+            transparent 52%
         );
 }
 
@@ -139,14 +141,11 @@ button{
 
 .mode-switch{
     position:fixed;
-
     top:18px;
     left:18px;
-
     z-index:50;
 
     display:flex;
-
     gap:6px;
 
     padding:6px;
@@ -171,7 +170,6 @@ button{
 
 .mode-button{
     border:0;
-
     border-radius:9px;
 
     padding:
@@ -184,9 +182,7 @@ button{
     background:transparent;
 
     font-size:11px;
-
     font-weight:800;
-
     letter-spacing:.08em;
 
     transition:
@@ -198,9 +194,7 @@ button{
 
 .mode-button:hover{
     color:#fff;
-
-    transform:
-        translateY(-1px);
+    transform:translateY(-1px);
 }
 
 
@@ -244,16 +238,12 @@ button{
 
     from{
         opacity:0;
-
-        transform:
-            translateY(10px);
+        transform:translateY(10px);
     }
 
     to{
         opacity:1;
-
-        transform:
-            translateY(0);
+        transform:translateY(0);
     }
 
 }
@@ -287,10 +277,7 @@ button{
         );
 
     line-height:.86;
-
-    letter-spacing:
-        -.055em;
-
+    letter-spacing:-.055em;
     font-weight:950;
 
     text-shadow:
@@ -302,7 +289,6 @@ button{
 
 
 .hero h1 span{
-
     display:block;
 
     background:
@@ -314,18 +300,13 @@ button{
         );
 
     -webkit-background-clip:text;
-
     background-clip:text;
-
-    -webkit-text-fill-color:
-        transparent;
+    -webkit-text-fill-color:transparent;
 }
 
 
 .hero p{
-
-    max-width:
-        650px;
+    max-width:650px;
 
     margin:
         20px
@@ -335,31 +316,23 @@ button{
     color:
         rgba(225,235,250,.78);
 
-    font-size:
-        16px;
-
-    line-height:
-        1.65;
+    font-size:16px;
+    line-height:1.65;
 }
 
 
 .creator{
-
-    margin-top:
-        16px;
+    margin-top:16px;
 
     color:
         rgba(230,239,250,.78);
 
-    font-size:
-        15px;
+    font-size:15px;
 }
 
 
 .creator strong{
-
-    color:
-        #62b9ff;
+    color:#62b9ff;
 }
 
 
@@ -368,16 +341,13 @@ button{
 ========================= */
 
 .box{
-
-    padding:
-        30px;
+    padding:30px;
 
     border:
         1px solid
         rgba(85,165,255,.20);
 
-    border-radius:
-        22px;
+    border-radius:22px;
 
     background:
         rgba(3,15,31,.38);
@@ -394,7 +364,6 @@ button{
 
 
 .box h2{
-
     margin:
         0
         0
@@ -414,39 +383,29 @@ button{
 ========================= */
 
 .form-grid{
-
     display:grid;
 
     grid-template-columns:
         repeat(3,1fr);
 
-    gap:
-        18px;
+    gap:18px;
 }
 
 
 .field label{
-
     display:block;
 
-    margin-bottom:
-        9px;
+    margin-bottom:9px;
 
-    font-size:
-        13px;
-
-    font-weight:
-        700;
+    font-size:13px;
+    font-weight:700;
 }
 
 
 .field select,
 .field input{
-
     width:100%;
-
-    min-height:
-        50px;
+    min-height:50px;
 
     padding:
         0
@@ -456,13 +415,11 @@ button{
         1px solid
         rgba(90,165,245,.28);
 
-    border-radius:
-        10px;
+    border-radius:10px;
 
     outline:none;
 
-    color:
-        #f2f7ff;
+    color:#f2f7ff;
 
     background:
         rgba(3,14,29,.72);
@@ -475,7 +432,6 @@ button{
 
 .field select:focus,
 .field input:focus{
-
     border-color:
         rgba(80,170,255,.65);
 
@@ -488,68 +444,48 @@ button{
 
 
 .field select option{
-
-    background:
-        #071426;
-
+    background:#071426;
     color:#fff;
 }
 
 
 .favorites{
-
-    margin-top:
-        23px;
+    margin-top:23px;
 }
 
 
 .favorites-title{
+    margin-bottom:10px;
 
-    margin-bottom:
-        10px;
-
-    font-size:
-        14px;
-
-    font-weight:
-        700;
+    font-size:14px;
+    font-weight:700;
 }
 
 
 .favorite-grid{
-
     display:grid;
 
     grid-template-columns:
         repeat(3,1fr);
 
-    gap:
-        12px;
+    gap:12px;
 }
 
 
 .find-button{
-
     width:100%;
 
-    margin-top:
-        25px;
+    margin-top:25px;
 
-    padding:
-        16px;
+    padding:16px;
 
     border:0;
-
-    border-radius:
-        12px;
+    border-radius:12px;
 
     color:#fff;
 
-    font-weight:
-        900;
-
-    letter-spacing:
-        .08em;
+    font-weight:900;
+    letter-spacing:.08em;
 
     background:
         linear-gradient(
@@ -571,9 +507,7 @@ button{
 
 
 .find-button:hover{
-
-    transform:
-        translateY(-2px);
+    transform:translateY(-2px);
 
     box-shadow:
         0
@@ -584,11 +518,8 @@ button{
 
 
 .find-button:disabled{
-
     opacity:.65;
-
-    cursor:
-        wait;
+    cursor:wait;
 }
 
 
@@ -597,26 +528,20 @@ button{
 ========================= */
 
 .results{
-
-    margin-top:
-        30px;
+    margin-top:30px;
 }
 
 
 .loading{
+    padding:50px;
 
-    padding:
-        50px;
-
-    text-align:
-        center;
+    text-align:center;
 
     border:
         1px solid
         rgba(85,165,255,.2);
 
-    border-radius:
-        18px;
+    border-radius:18px;
 
     background:
         rgba(3,15,31,.48);
@@ -627,12 +552,8 @@ button{
 
 
 .spinner{
-
-    width:
-        38px;
-
-    height:
-        38px;
+    width:38px;
+    height:38px;
 
     margin:
         0
@@ -643,11 +564,9 @@ button{
         3px solid
         rgba(255,255,255,.15);
 
-    border-top-color:
-        #54aaff;
+    border-top-color:#54aaff;
 
-    border-radius:
-        50%;
+    border-radius:50%;
 
     animation:
         spin
@@ -660,23 +579,18 @@ button{
 @keyframes spin{
 
     to{
-        transform:
-            rotate(360deg);
+        transform:rotate(360deg);
     }
 
 }
 
 
 .loading p{
-
     color:
         rgba(225,235,250,.72);
 
-    font-size:
-        13px;
-
-    line-height:
-        1.7;
+    font-size:13px;
+    line-height:1.7;
 }
 
 
@@ -685,36 +599,29 @@ button{
 ========================= */
 
 .movie-grid{
-
     display:grid;
 
     grid-template-columns:
         repeat(2,1fr);
 
-    gap:
-        18px;
+    gap:18px;
 }
 
 
 .movie-card{
-
     display:flex;
 
-    gap:
-        16px;
+    gap:16px;
 
-    padding:
-        15px;
+    padding:15px;
 
-    min-height:
-        180px;
+    min-height:180px;
 
     border:
         1px solid
         rgba(90,165,255,.18);
 
-    border-radius:
-        16px;
+    border-radius:16px;
 
     background:
         rgba(3,15,31,.46);
@@ -736,7 +643,6 @@ button{
 
 
 .movie-card:hover{
-
     transform:
         translate3d(
             0,
@@ -760,18 +666,12 @@ button{
 
 
 .movie-card img{
+    width:105px;
+    height:158px;
 
-    width:
-        105px;
+    object-fit:cover;
 
-    height:
-        158px;
-
-    object-fit:
-        cover;
-
-    border-radius:
-        9px;
+    border-radius:9px;
 
     flex:none;
 
@@ -783,9 +683,7 @@ button{
 
 
 .movie-card:hover img{
-
-    transform:
-        scale(1.035);
+    transform:scale(1.035);
 
     filter:
         brightness(1.05)
@@ -794,74 +692,56 @@ button{
 
 
 .movie-info{
-
     min-width:0;
 }
 
 
 .movie-info h3{
-
     margin:
         0
         0
         7px;
 
-    font-size:
-        19px;
+    font-size:19px;
 }
 
 
 .movie-meta{
+    color:#70bfff;
 
-    color:
-        #70bfff;
+    font-size:13px;
 
-    font-size:
-        13px;
-
-    margin-bottom:
-        9px;
+    margin-bottom:9px;
 }
 
 
 .movie-rating{
-
     display:inline-block;
 
-    margin-bottom:
-        9px;
+    margin-bottom:9px;
 
     padding:
         4px
         8px;
 
-    border-radius:
-        6px;
+    border-radius:6px;
 
     background:
         rgba(255,193,7,.12);
 
-    color:
-        #ffd76a;
+    color:#ffd76a;
 
-    font-size:
-        12px;
-
-    font-weight:
-        800;
+    font-size:12px;
+    font-weight:800;
 }
 
 
 .movie-reason{
-
     color:
         rgba(225,235,250,.72);
 
-    font-size:
-        13px;
-
-    line-height:
-        1.5;
+    font-size:13px;
+    line-height:1.5;
 }
 
 
@@ -870,37 +750,28 @@ button{
 ========================= */
 
 .picks-header{
-
     display:flex;
 
-    align-items:
-        flex-end;
+    align-items:flex-end;
 
-    justify-content:
-        space-between;
+    justify-content:space-between;
 
-    gap:
-        18px;
+    gap:18px;
 
-    margin-bottom:
-        30px;
+    margin-bottom:30px;
 }
 
 
 .picks-title-group{
-
     display:flex;
 
-    flex-direction:
-        column;
+    flex-direction:column;
 
-    align-items:
-        flex-start;
+    align-items:flex-start;
 }
 
 
 .picks-header h2{
-
     margin:0;
 
     font-size:
@@ -910,8 +781,7 @@ button{
             34px
         );
 
-    letter-spacing:
-        -.025em;
+    letter-spacing:-.025em;
 
     text-shadow:
         0
@@ -922,34 +792,25 @@ button{
 
 
 .picks-subtitle{
-
-    margin-top:
-        13px;
+    margin-top:13px;
 
     color:
         rgba(190,220,250,.48);
 
-    font-size:
-        9px;
+    font-size:9px;
 
-    font-weight:
-        800;
+    font-weight:800;
 
-    letter-spacing:
-        .18em;
+    letter-spacing:.18em;
 
-    line-height:
-        1.4;
+    line-height:1.4;
 
-    text-transform:
-        uppercase;
+    text-transform:uppercase;
 }
 
 
 #pickCategory{
-
-    min-width:
-        210px;
+    min-width:210px;
 
     padding:
         12px
@@ -959,8 +820,7 @@ button{
         1px solid
         rgba(90,165,245,.3);
 
-    border-radius:
-        10px;
+    border-radius:10px;
 
     color:#fff;
 
@@ -975,117 +835,207 @@ button{
 
 
 .picks-grid{
-
     display:grid;
 
     grid-template-columns:
         repeat(2,1fr);
 
-    gap:
-        18px;
+    gap:18px;
+
+    perspective:1200px;
+
+    perspective-origin:
+        center center;
 }
 
 
-.pick-card{
+/* REMOVE THE LARGE BOX BEHIND PANAYIOTIS' MOVIES */
+
+#picksMode .box{
+    padding:0;
+
+    border:0;
+
+    border-radius:0;
+
+    background:transparent;
+
+    box-shadow:none;
+
+    backdrop-filter:none;
+}
+
+
+/* =========================
+   REAL 3-D MOVIE CARDS
+========================= */
+
+#picksMode .pick-card{
+
+    position:relative;
 
     display:flex;
 
-    align-items:
-        center;
+    align-items:center;
 
-    gap:
-        12px;
+    gap:12px;
 
-    min-height:
-        150px;
+    min-height:150px;
 
-    padding:
-        12px;
+    padding:12px;
 
     border:
         1px solid
-        rgba(90,165,255,.18);
+        rgba(90,165,255,.20);
 
-    border-radius:
-        15px;
+    border-radius:15px;
 
     background:
-        rgba(3,15,31,.46);
+        rgba(3,15,31,.34);
 
     backdrop-filter:
-        blur(7px);
+        blur(3px);
 
     box-shadow:
         0
         18px
         45px
-        rgba(0,0,0,.22);
+        rgba(0,0,0,.28);
+
+    transform-style:preserve-3d;
+
+    transform:
+        perspective(900px)
+        rotateX(
+            var(--card-rotate-x,0deg)
+        )
+        rotateY(
+            var(--card-rotate-y,0deg)
+        )
+        translate3d(
+            var(--card-x,0px),
+            var(--card-y,0px),
+            0
+        );
 
     transition:
-        transform .28s ease,
-        border-color .28s ease,
-        box-shadow .28s ease;
+        transform .10s ease-out,
+        border-color .25s ease,
+        box-shadow .25s ease;
+
+    will-change:transform;
 }
 
 
-.pick-card:hover{
+#picksMode .pick-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    border-radius:15px;
+
+    pointer-events:none;
+
+    background:
+        radial-gradient(
+            circle at
+            var(--shine-x,50%)
+            var(--shine-y,50%),
+            rgba(120,205,255,.18),
+            transparent 35%
+        );
+
+    opacity:0;
+
+    transition:
+        opacity .2s ease;
+
+    z-index:5;
+}
+
+
+#picksMode .pick-card.is-3d::before{
+    opacity:1;
+}
+
+
+#picksMode .pick-card:hover{
+
+    border-color:
+        rgba(100,190,255,.58);
+
+    box-shadow:
+        0
+        28px
+        60px
+        rgba(0,0,0,.44),
+        0
+        0
+        38px
+        rgba(50,145,255,.14);
+}
+
+
+#picksMode .pick-card .pick-poster{
 
     transform:
         translate3d(
             0,
-            -4px,
-            0
+            0,
+            22px
+        )
+        scale(
+            var(--poster-scale,1)
         );
 
-    border-color:
-        rgba(90,175,255,.42);
+    transform-style:
+        preserve-3d;
 
     box-shadow:
         0
-        18px
-        45px
-        rgba(0,0,0,.34),
-        0
-        0
-        28px
-        rgba(40,130,255,.08);
+        14px
+        30px
+        rgba(0,0,0,.42);
+
+    transition:
+        transform .10s ease-out,
+        filter .25s ease;
+}
+
+
+#picksMode .pick-card .pick-rank{
+    transform:
+        translateZ(32px);
+}
+
+
+#picksMode .pick-card .pick-info{
+    transform:
+        translateZ(26px);
+}
+
+
+#picksMode .pick-card .pick-rating{
+    transform:
+        translateZ(34px);
 }
 
 
 .pick-poster{
 
-    width:
-        92px;
+    width:92px;
+    height:138px;
 
-    height:
-        138px;
+    object-fit:cover;
 
-    object-fit:
-        cover;
-
-    border-radius:
-        8px;
+    border-radius:8px;
 
     flex:none;
 
-    background:
-        #071426;
-
-    transition:
-        transform .4s
-        cubic-bezier(.2,.7,.2,1),
-        filter .4s ease;
-}
-
-
-.pick-card:hover .pick-poster{
-
-    transform:
-        scale(1.035);
-
-    filter:
-        brightness(1.05)
-        saturate(1.05);
+    background:#071426;
 }
 
 
@@ -1093,14 +1043,11 @@ button{
 
     display:flex;
 
-    align-items:
-        flex-end;
+    align-items:flex-end;
 
-    justify-content:
-        flex-start;
+    justify-content:flex-start;
 
-    padding:
-        10px;
+    padding:10px;
 
     color:
         rgba(255,255,255,.88);
@@ -1112,65 +1059,48 @@ button{
             rgba(3,15,31,.95)
         );
 
-    font-size:
-        11px;
+    font-size:11px;
 
-    font-weight:
-        800;
+    font-weight:800;
 
-    line-height:
-        1.15;
+    line-height:1.15;
 
-    text-align:
-        left;
+    text-align:left;
 }
 
 
 .pick-poster-fallback span{
-
     display:block;
 }
 
 
 .pick-rank{
 
-    width:
-        32px;
-
-    height:
-        32px;
+    width:32px;
+    height:32px;
 
     display:flex;
 
-    align-items:
-        center;
-
-    justify-content:
-        center;
+    align-items:center;
+    justify-content:center;
 
     flex:none;
 
-    border-radius:
-        50%;
+    border-radius:50%;
 
     background:
         rgba(45,135,255,.2);
 
-    color:
-        #70bfff;
+    color:#70bfff;
 
-    font-size:
-        11px;
+    font-size:11px;
 
-    font-weight:
-        900;
+    font-weight:900;
 }
 
 
 .pick-info{
-
     min-width:0;
-
     flex:1;
 }
 
@@ -1182,8 +1112,7 @@ button{
         0
         5px;
 
-    font-size:
-        16px;
+    font-size:16px;
 }
 
 
@@ -1192,8 +1121,7 @@ button{
     color:
         rgba(220,235,255,.58);
 
-    font-size:
-        12px;
+    font-size:12px;
 }
 
 
@@ -1201,17 +1129,13 @@ button{
 
     display:inline-block;
 
-    margin-top:
-        9px;
+    margin-top:9px;
 
-    color:
-        #70bfff;
+    color:#70bfff;
 
-    font-size:
-        11px;
+    font-size:11px;
 
-    text-decoration:
-        none;
+    text-decoration:none;
 
     transition:
         color .2s ease;
@@ -1219,27 +1143,21 @@ button{
 
 
 .pick-tmdb:hover{
-
     color:#fff;
 }
 
 
 .pick-rating{
 
-    min-width:
-        65px;
+    min-width:65px;
 
-    text-align:
-        right;
+    text-align:right;
 
-    color:
-        #ffd76a;
+    color:#ffd76a;
 
-    font-size:
-        13px;
+    font-size:13px;
 
-    font-weight:
-        900;
+    font-weight:900;
 }
 
 
@@ -1249,11 +1167,9 @@ button{
 
 .error-box{
 
-    padding:
-        18px;
+    padding:18px;
 
-    border-radius:
-        12px;
+    border-radius:12px;
 
     background:
         rgba(180,30,30,.18);
@@ -1262,8 +1178,7 @@ button{
         1px solid
         rgba(255,80,80,.25);
 
-    color:
-        #ffb0b0;
+    color:#ffb0b0;
 }
 
 
@@ -1273,20 +1188,16 @@ button{
 
 .tmdb{
 
-    margin-top:
-        40px;
+    margin-top:40px;
 
-    text-align:
-        center;
+    text-align:center;
 
     color:
         rgba(220,235,255,.5);
 
-    font-size:
-        11px;
+    font-size:11px;
 
-    line-height:
-        1.5;
+    line-height:1.5;
 }
 
 
@@ -1296,8 +1207,7 @@ button{
 
 .site-footer{
 
-    margin-top:
-        65px;
+    margin-top:65px;
 
     padding:
         30px
@@ -1308,17 +1218,14 @@ button{
         1px solid
         rgba(100,170,240,.14);
 
-    text-align:
-        center;
+    text-align:center;
 
     color:
         rgba(210,225,245,.48);
 
-    font-size:
-        11px;
+    font-size:11px;
 
-    line-height:
-        1.7;
+    line-height:1.7;
 }
 
 
@@ -1326,17 +1233,14 @@ button{
 
     display:block;
 
-    margin-bottom:
-        5px;
+    margin-bottom:5px;
 
     color:
         rgba(235,245,255,.78);
 
-    font-size:
-        12px;
+    font-size:12px;
 
-    letter-spacing:
-        .14em;
+    letter-spacing:.14em;
 }
 
 
@@ -1351,37 +1255,31 @@ button{
     .movie-grid,
     .picks-grid{
 
-        grid-template-columns:
-            1fr;
+        grid-template-columns:1fr;
     }
 
 
     .picks-header{
 
-        align-items:
-            stretch;
+        align-items:stretch;
 
-        flex-direction:
-            column;
+        flex-direction:column;
     }
 
 
     #pickCategory{
-
         width:100%;
     }
 
 
     .mode-switch{
 
-        position:
-            relative;
+        position:relative;
 
         top:auto;
         left:auto;
 
-        width:
-            max-content;
+        width:max-content;
 
         margin:
             15px
@@ -1391,16 +1289,17 @@ button{
 
 
     .hero{
-
-        padding-top:
-            30px;
+        padding-top:30px;
     }
 
 
     .box{
+        padding:20px;
+    }
 
-        padding:
-            20px;
+
+    #picksMode .box{
+        padding:0;
     }
 
 }
@@ -1413,50 +1312,37 @@ button{
 @media(max-width:500px){
 
     .container{
-
         width:
             calc(100% - 20px);
     }
 
 
     .pick-card{
-
-        align-items:
-            flex-start;
+        align-items:flex-start;
     }
 
 
     .pick-rating{
-
-        min-width:
-            55px;
+        min-width:55px;
     }
 
 
     .pick-rank{
 
-        width:
-            28px;
-
-        height:
-            28px;
+        width:28px;
+        height:28px;
     }
 
 
     .movie-card{
-
-        padding:
-            12px;
+        padding:12px;
     }
 
 
     .movie-card img{
 
-        width:
-            88px;
-
-        height:
-            132px;
+        width:88px;
+        height:132px;
     }
 
 }
@@ -1469,18 +1355,30 @@ button{
 @media(prefers-reduced-motion:reduce){
 
     body:before{
+        transform:scale(1.07);
+        transition:none;
+    }
 
-        transform:
-            scale(1.045);
+
+    #picksMode .pick-card{
+
+        transform:none !important;
 
         transition:none;
     }
 
 
+    #picksMode .pick-card .pick-poster,
+    #picksMode .pick-card .pick-rank,
+    #picksMode .pick-card .pick-info,
+    #picksMode .pick-card .pick-rating{
+
+        transform:none !important;
+    }
+
+
     .movie-card,
-    .pick-card,
-    .movie-card img,
-    .pick-poster{
+    .movie-card img{
 
         transition:none;
     }
@@ -1492,6 +1390,8 @@ button{
 
 
 <body>
+
+<div class="cinematic-depth-glow"></div>
 
 
 <!-- =========================
@@ -1507,7 +1407,6 @@ button{
     >
         AI RECOMMENDER
     </button>
-
 
     <button
         class="mode-button"
@@ -1534,21 +1433,16 @@ button{
         <span>MIND</span>
     </h1>
 
-
     <p>
         Discover movies that match your taste,
         powered by TMDB and AI.
     </p>
 
-
     <div class="creator">
-
         Created by
-
         <strong>
             Panayiotis Kouzaris
         </strong>
-
     </div>
 
 </section>
@@ -1569,7 +1463,6 @@ button{
             Find Your Movies
         </h2>
 
-
         <div class="form-grid">
 
             <div class="field">
@@ -1577,7 +1470,6 @@ button{
                 <label for="genre">
                     Genre
                 </label>
-
 
                 <select id="genre">
 
@@ -1636,7 +1528,6 @@ button{
                     Release Period
                 </label>
 
-
                 <select id="period">
 
                     <option value="2020-2027">
@@ -1678,7 +1569,6 @@ button{
                     Plot Twist
                 </label>
 
-
                 <select id="plotTwist">
 
                     <option value="yes">
@@ -1706,7 +1596,6 @@ button{
                 Favorite Movies — up to 3
             </div>
 
-
             <div class="favorite-grid">
 
                 <div class="field">
@@ -1718,7 +1607,6 @@ button{
 
                 </div>
 
-
                 <div class="field">
 
                     <input
@@ -1727,7 +1615,6 @@ button{
                     >
 
                 </div>
-
 
                 <div class="field">
 
@@ -1922,23 +1809,14 @@ const API_URL =
 const PICK_GENRES = {
 
     "science-fiction":878,
-
     "thriller":53,
-
     "action":28,
-
     "drama":18,
-
     "comedy":35,
-
     "horror":27,
-
     "romance":10749,
-
     "mystery":9648,
-
     "adventure":12,
-
     "fantasy":14
 
 };
@@ -2069,18 +1947,15 @@ async function findMovies(){
             "results"
         );
 
-
     const loading =
         document.getElementById(
             "loading"
         );
 
-
     const out =
         document.getElementById(
             "movieResults"
         );
-
 
     const button =
         document.getElementById(
@@ -2091,14 +1966,11 @@ async function findMovies(){
     results.style.display =
         "block";
 
-
     loading.style.display =
         "block";
 
-
     out.style.display =
         "none";
-
 
     out.innerHTML =
         "";
@@ -2106,7 +1978,6 @@ async function findMovies(){
 
     button.disabled =
         true;
-
 
     button.textContent =
         "SEARCHING...";
@@ -2311,10 +2182,8 @@ async function findMovies(){
         loading.style.display =
             "none";
 
-
         button.disabled =
             false;
-
 
         button.textContent =
             "FIND MY MOVIES";
@@ -2355,6 +2224,175 @@ function loadPanayiotisCatalog(){
 
 
     return window.PANAYIOTIS_CATALOG;
+
+}
+
+
+/* =========================
+   3-D CARD EFFECT
+========================= */
+
+function init3DCardEffects(){
+
+    const cards =
+        document.querySelectorAll(
+            "#picksMode .pick-card"
+        );
+
+
+    if(
+        !window.matchMedia(
+            "(pointer:fine)"
+        ).matches
+    ){
+
+        return;
+
+    }
+
+
+    cards.forEach(card => {
+
+        card.addEventListener(
+            "mousemove",
+            event => {
+
+                const rect =
+                    card.getBoundingClientRect();
+
+
+                const x =
+                    event.clientX -
+                    rect.left;
+
+
+                const y =
+                    event.clientY -
+                    rect.top;
+
+
+                const percentX =
+                    (x / rect.width) - .5;
+
+
+                const percentY =
+                    (y / rect.height) - .5;
+
+
+                const rotateY =
+                    percentX * 10;
+
+
+                const rotateX =
+                    percentY * -10;
+
+
+                const moveX =
+                    percentX * 4;
+
+
+                const moveY =
+                    percentY * 4;
+
+
+                card.style.setProperty(
+                    "--card-rotate-x",
+                    `${rotateX.toFixed(2)}deg`
+                );
+
+
+                card.style.setProperty(
+                    "--card-rotate-y",
+                    `${rotateY.toFixed(2)}deg`
+                );
+
+
+                card.style.setProperty(
+                    "--card-x",
+                    `${moveX.toFixed(2)}px`
+                );
+
+
+                card.style.setProperty(
+                    "--card-y",
+                    `${moveY.toFixed(2)}px`
+                );
+
+
+                card.style.setProperty(
+                    "--shine-x",
+                    `${(percentX + .5) * 100}%`
+                );
+
+
+                card.style.setProperty(
+                    "--shine-y",
+                    `${(percentY + .5) * 100}%`
+                );
+
+
+                card.style.setProperty(
+                    "--poster-scale",
+                    "1.025"
+                );
+
+
+                card.classList.add(
+                    "is-3d"
+                );
+
+            },
+            {
+                passive:true
+            }
+        );
+
+
+        card.addEventListener(
+            "mouseleave",
+            () => {
+
+                card.style.setProperty(
+                    "--card-rotate-x",
+                    "0deg"
+                );
+
+
+                card.style.setProperty(
+                    "--card-rotate-y",
+                    "0deg"
+                );
+
+
+                card.style.setProperty(
+                    "--card-x",
+                    "0px"
+                );
+
+
+                card.style.setProperty(
+                    "--card-y",
+                    "0px"
+                );
+
+
+                card.style.setProperty(
+                    "--poster-scale",
+                    "1"
+                );
+
+
+                card.classList.remove(
+                    "is-3d"
+                );
+
+            },
+            {
+                passive:true
+            }
+        );
+
+    });
 
 }
 
@@ -2569,6 +2607,11 @@ async function displayPicks(){
                 .join("");
 
 
+        requestAnimationFrame(
+            init3DCardEffects
+        );
+
+
     }catch(e){
 
         console.error(e);
@@ -2615,7 +2658,7 @@ displayPicks();
 
 
 /* =========================
-   CINEMATIC 3-D PARALLAX
+   CINEMATIC BACKGROUND PARALLAX
 ========================= */
 
 (function initCinematicParallax(){
@@ -2631,7 +2674,7 @@ displayPicks();
     let currentY = 0;
 
 
-    const maxMove = 10;
+    const maxMove = 16;
 
 
     function updateTarget(
@@ -2808,7 +2851,6 @@ function escapeAttr(v){
 }
 
 </script>
-
 
 </body>
 </html>
