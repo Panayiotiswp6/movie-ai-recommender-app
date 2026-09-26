@@ -23,7 +23,7 @@ button,select,input{font:inherit}button{cursor:pointer}
 .mode-button{border:0;border-radius:999px;padding:11px 18px;color:rgba(230,240,255,.62);background:transparent;font-size:10px;font-weight:900;letter-spacing:.11em;transition:.3s ease}
 .mode-button:hover{color:#fff;background:rgba(255,255,255,.07)} .mode-button.active{color:#fff;background:linear-gradient(135deg,rgba(74,153,255,.75),rgba(27,74,180,.72));box-shadow:0 8px 25px rgba(34,117,255,.24),inset 0 0 0 1px rgba(255,255,255,.18)}
 .mode-content{display:none} .mode-content.active{display:block}
-.hero{min-height:76vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 10px 100px;position:relative}
+.hero{min-height:calc(100vh - 120px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 10px 100px;position:relative}
 .hero::before{content:"";position:absolute;width:min(700px,80vw);height:260px;top:35%;background:radial-gradient(ellipse,rgba(38,125,255,.17),transparent 70%);filter:blur(20px);z-index:-1}
 .eyebrow{display:inline-flex;align-items:center;gap:9px;padding:8px 13px;border:1px solid rgba(255,255,255,.15);border-radius:999px;background:rgba(5,12,25,.38);backdrop-filter:blur(12px);font-size:10px;font-weight:800;letter-spacing:.18em;color:rgba(235,243,255,.78);animation:fadeUp .9s both}
 .eyebrow i{width:6px;height:6px;border-radius:50%;background:#69b8ff;box-shadow:0 0 16px #69b8ff}
@@ -31,7 +31,7 @@ button,select,input{font:inherit}button{cursor:pointer}
 .hero h1 span{display:block;background:linear-gradient(180deg,#fff 5%,#b7ddff 38%,#398cff 90%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .hero p{max-width:670px;margin:24px auto 0;color:rgba(234,241,252,.76);font-size:clamp(15px,2vw,19px);line-height:1.65;animation:fadeUp 1s .25s both}
 .creator{margin-top:18px;color:rgba(230,239,250,.64);font-size:13px;animation:fadeUp 1s .35s both} .creator strong{color:#72bcff}
-.scroll-cue{position:absolute;bottom:22px;display:flex;flex-direction:column;align-items:center;gap:8px;color:rgba(255,255,255,.45);font-size:9px;letter-spacing:.2em} .scroll-cue span{width:1px;height:38px;background:linear-gradient(#72bcff,transparent);animation:scrollLine 1.8s ease-in-out infinite}
+.scroll-cue{position:absolute;bottom:22px;display:flex;cursor:pointer;user-select:none;flex-direction:column;align-items:center;gap:8px;color:rgba(255,255,255,.45);font-size:9px;letter-spacing:.2em} .scroll-cue span{width:1px;height:38px;background:linear-gradient(#72bcff,transparent);animation:scrollLine 1.8s ease-in-out infinite}
 .section-kicker{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#72bcff;font-weight:900;margin-bottom:10px}
 .section-title{margin:0;font-size:clamp(30px,5vw,58px);letter-spacing:-.045em;line-height:1}
 .section-copy{max-width:620px;color:rgba(230,238,250,.65);line-height:1.65;margin:14px 0 0}
@@ -774,8 +774,6 @@ document
         displayPicks
     );
 
-displayPicks();
-
 
 
 /* =========================
@@ -840,6 +838,15 @@ displayPicks=async function(){
     document.querySelectorAll('#picksMode .pick-card').forEach(addTilt);
     document.querySelectorAll('#picksMode .pick-card').forEach((el,i)=>{ el.style.setProperty('--delay',`${i*45}ms`); el.classList.add('reveal','is-visible'); });
 };
+
+// Start the local Picks catalog only after the motion wrapper is installed.
+displayPicks();
+
+const scrollCue=document.querySelector('.scroll-cue');
+if(scrollCue){
+    scrollCue.addEventListener('click',()=>document.getElementById('aiMode').scrollIntoView({behavior:'smooth',block:'start'}));
+}
+
 
 function initMagneticButtons(){
     document.querySelectorAll('.magnetic').forEach(button=>{
