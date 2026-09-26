@@ -540,6 +540,24 @@ button{
     background:#071426;
 }
 
+.pick-poster-fallback{
+    display:flex;
+    align-items:flex-end;
+    justify-content:flex-start;
+    padding:10px;
+    color:rgba(255,255,255,.88);
+    background:
+        linear-gradient(145deg,rgba(30,90,180,.8),rgba(3,15,31,.95));
+    font-size:11px;
+    font-weight:800;
+    line-height:1.15;
+    text-align:left;
+}
+
+.pick-poster-fallback span{
+    display:block;
+}
+
 .pick-rank{
     width:32px;
     height:32px;
@@ -1083,6 +1101,8 @@ button{
 </main>
 
 
+<script src="./panayiotis-picks.js"></script>
+
 <script>
 
 const API_URL =
@@ -1493,97 +1513,20 @@ document
    LOAD PANAYIOTIS' CATALOG
 ========================= */
 
-async function loadPanayiotisCatalog(){
-
-    if(PANAYIOTIS_CATALOG){
-
-        return PANAYIOTIS_CATALOG;
-
-    }
-
-
-    const grid =
-        document.getElementById(
-            "picksGrid"
-        );
-
-
-    grid.innerHTML = `
-
-        <div
-            class="loading"
-            style="
-                display:block;
-                grid-column:1/-1
-            "
-        >
-
-            <div
-                class="spinner"
-            ></div>
-
-            <p>
-                Loading Panayiotis' Picks...
-            </p>
-
-        </div>
-
-    `;
-
-
-    const response =
-        await fetch(
-            API_URL,
-            {
-                method:"POST",
-
-                headers:{
-                    "Content-Type":
-                        "application/json"
-                },
-
-                body:
-                    JSON.stringify({
-                        action:
-                            "panayiotisPicksV6"
-                    })
-            }
-        );
-
-
-    const data =
-        await response.json();
-
+function loadPanayiotisCatalog(){
 
     if(
-        !response.ok ||
-        !data.success
+        !window.PANAYIOTIS_CATALOG ||
+        !Array.isArray(window.PANAYIOTIS_CATALOG.movies)
     ){
 
         throw new Error(
-            data.error ||
-            "Could not load Panayiotis' Picks."
+            "The local Panayiotis' Picks catalog could not be loaded."
         );
 
     }
 
-
-    if(
-        !Array.isArray(data.movies)
-    ){
-
-        throw new Error(
-            "Panayiotis' Picks returned an invalid movie catalog."
-        );
-
-    }
-
-
-    PANAYIOTIS_CATALOG =
-        data.movies;
-
-
-    return PANAYIOTIS_CATALOG;
+    return window.PANAYIOTIS_CATALOG;
 
 }
 
@@ -1598,212 +1541,113 @@ async function displayPicks(){
             "pickCategory"
         ).value;
 
-
     const grid =
         document.getElementById(
             "picksGrid"
         );
-
 
     const title =
         document.getElementById(
             "picksTitle"
         );
 
-
     title.textContent =
-        PICK_GENRE_NAMES[
-            category
-        ];
-
+        PICK_GENRE_NAMES[category];
 
     try{
 
         const catalog =
-            await loadPanayiotisCatalog();
+            loadPanayiotisCatalog();
 
-
-        /*
-         * IMPORTANT:
-         *
-         * ALL Letterboxd movies are used.
-         *
-         * There is NO Top 100 limit.
-         */
-
-        /*
-         * The 10 movies in each category are
-         * the confirmed Letterboxd selections.
-         *
-         * A movie can appear in multiple categories.
-         */
-
-        let movies =
-            catalog.filter(
-                movie =>
-                    Array.isArray(
-                        movie.categories
-                    )
-                    &&
-                    movie.categories.includes(
-                        category
-                    )
+        const movieMap =
+            new Map(
+                catalog.movies.map(
+                    movie => [movie.title, movie]
+                )
             );
 
+        const orderedTitles =
+            catalog.categories[category] || [];
 
-        /*
-         * Always keep the confirmed Letterboxd
-         * order and display exactly 10.
-         */
+        const movies =
+            orderedTitles
+                .map(title => movieMap.get(title))
+                .filter(Boolean)
+                .slice(0,10);
 
-        movies =
-            movies.slice(
-                0,
-                10
-            );
-
-
-        if(
-            !movies.length
-        ){
+        if(!movies.length){
 
             grid.innerHTML = `
-
-                <div
-                    class="error-box"
-                    style="
-                        grid-column:1/-1
-                    "
-                >
-                    No rated movies were
-                    found in this category.
+                <div class="error-box" style="grid-column:1/-1">
+                    No movies were found in this category.
                 </div>
-
             `;
 
             return;
-
         }
-
 
         grid.innerHTML =
             movies
-                .map(
-                    (movie,index) => {
+                .map((movie,index) => {
 
-
-                        const poster =
-                            movie.poster_path
-
-                            ?
-
-                            `
+                    const poster =
+                        movie.poster_path
+                        ? `
                             <img
                                 class="pick-poster"
                                 src="https://image.tmdb.org/t/p/w342${movie.poster_path}"
-                                alt="${escapeAttr(
-                                    movie.title
-                                )}"
+                                alt="${escapeAttr(movie.title)}"
                                 loading="lazy"
                             >
-                            `
+                          `
+                        : `
+                            <div class="pick-poster pick-poster-fallback" aria-label="${escapeAttr(movie.title)}">
+                                <span>${escapeHtml(movie.title)}</span>
+                            </div>
+                          `;
 
-                            :
+                    const url =
+                        movie.tmdb_id
+                        ? `https://www.themoviedb.org/movie/${movie.tmdb_id}`
+                        : `https://www.themoviedb.org/search/movie?query=${encodeURIComponent(movie.title)}`;
 
-                            `
-                            <div
-                                class="pick-poster"
-                            ></div>
-                            `;
+                    return `
+                        <article class="pick-card">
+                            ${poster}
 
+                            <div class="pick-rank">
+                                #${index + 1}
+                            </div>
 
-                        const url =
-                            movie.tmdb_id
+                            <div class="pick-info">
+                                <h3 class="pick-title">
+                                    ${escapeHtml(movie.title)}
+                                </h3>
 
-                            ?
-
-                            `https://www.themoviedb.org/movie/${movie.tmdb_id}`
-
-                            :
-
-                            `https://www.themoviedb.org/search/movie?query=${encodeURIComponent(
-                                movie.title
-                            )}`;
-
-
-                        return `
-
-                            <article
-                                class="pick-card"
-                            >
-
-                                ${poster}
-
-
-                                <div
-                                    class="pick-rank"
-                                >
-                                    #${index + 1}
+                                <div class="pick-year">
+                                    ${escapeHtml(String(movie.year || ""))}
                                 </div>
 
-
-                                <div
-                                    class="pick-info"
+                                <a
+                                    class="pick-tmdb"
+                                    href="${escapeAttr(url)}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                 >
+                                    VIEW ON TMDB →
+                                </a>
+                            </div>
 
-                                    <h3
-                                        class="pick-title"
-                                    >
-                                        ${escapeHtml(
-                                            movie.title
-                                        )}
-                                    </h3>
-
-
-                                    <div
-                                        class="pick-year"
-                                    >
-                                        ${escapeHtml(
-                                            String(
-                                                movie.year || ""
-                                            )
-                                        )}
-                                    </div>
-
-
-                                    <a
-                                        class="pick-tmdb"
-                                        href="${escapeAttr(
-                                            url
-                                        )}"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        VIEW ON TMDB →
-                                    </a>
-
-                                </div>
-
-
-                                <div
-                                    class="pick-rating"
-                                >
-                                    ${Number(
-                                        movie.rating || 0
-                                    ).toFixed(1)}
-                                    / 5
-                                </div>
-
-                            </article>
-
-                        `;
-
-                    }
-                )
+                            <div class="pick-rating">
+                                ${Number(movie.rating || 0).toFixed(1)} / 5
+                            </div>
+                        </article>
+                    `;
+                })
                 .join("");
 
-
     }catch(e){
+
 
         console.error(e);
 
