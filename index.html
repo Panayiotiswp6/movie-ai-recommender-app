@@ -30,10 +30,24 @@ body{
             rgba(2,7,17,.38),
             rgba(2,7,17,.62)
         ),
-        url("IMG_1106.png")
+        url("IMG_1106.jpg")
         center/cover fixed no-repeat;
 
     overflow-x:hidden;
+}
+
+body:before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:-1;
+
+    background:
+        linear-gradient(180deg, rgba(1,7,18,.18), rgba(2,7,17,.30) 45%, rgba(1,5,14,.62) 100%),
+        radial-gradient(circle at 50% 42%, rgba(35,125,220,.10), transparent 48%);
+
+    mix-blend-mode:multiply;
 }
 
 body:after{
@@ -44,11 +58,10 @@ body:after{
     z-index:-1;
 
     background:
-        radial-gradient(
-            ellipse at center,
-            transparent 30%,
-            rgba(0,0,0,.45) 100%
-        );
+        radial-gradient(ellipse at center, transparent 28%, rgba(0,0,0,.56) 100%),
+        repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.018) 0 1px, transparent 1px 4px);
+
+    opacity:.72;
 }
 
 button,
@@ -79,49 +92,46 @@ button{
     z-index:50;
 
     display:flex;
-    gap:6px;
+    gap:4px;
 
-    padding:6px;
+    padding:5px;
 
-    border:1px solid rgba(90,170,255,.28);
-    border-radius:14px;
+    border:1px solid rgba(120,190,255,.24);
+    border-radius:16px;
 
-    background:rgba(3,12,27,.82);
-
-    backdrop-filter:blur(18px);
+    background:rgba(2,10,24,.68);
+    backdrop-filter:blur(22px) saturate(135%);
 
     box-shadow:
-        0 12px 35px rgba(0,0,0,.35);
+        0 14px 45px rgba(0,0,0,.38),
+        inset 0 1px 0 rgba(255,255,255,.06);
 }
 
 .mode-button{
+    position:relative;
     border:0;
-    border-radius:9px;
-
-    padding:10px 14px;
-
-    color:rgba(220,235,255,.65);
+    border-radius:11px;
+    padding:11px 15px;
+    color:rgba(220,235,255,.60);
     background:transparent;
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:.09em;
+    transition:color .25s ease, background .25s ease, transform .25s ease, box-shadow .25s ease;
+}
 
-    font-size:11px;
-    font-weight:800;
-    letter-spacing:.08em;
+.mode-button:hover{
+    color:#fff;
+    transform:translateY(-1px);
 }
 
 .mode-button.active{
     color:#fff;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(45,135,255,.42),
-            rgba(30,80,180,.3)
-        );
-
+    background:linear-gradient(135deg, rgba(55,150,255,.48), rgba(20,70,170,.34));
     box-shadow:
-        inset 0 0 0 1px rgba(100,185,255,.22);
+        inset 0 0 0 1px rgba(125,200,255,.22),
+        0 5px 18px rgba(20,100,220,.16);
 }
-
 
 /* =========================
    MODE CONTENT
@@ -133,6 +143,57 @@ button{
 
 .mode-content.active{
     display:block;
+    animation:modeIn .35s ease both;
+}
+
+@keyframes modeIn{
+    from{opacity:0;transform:translateY(8px)}
+    to{opacity:1;transform:translateY(0)}
+}
+
+@keyframes cardIn{
+    from{opacity:0;transform:translateY(10px)}
+    to{opacity:1;transform:translateY(0)}
+}
+
+.hero,
+.box,
+.picks-shell{
+    animation:cardIn .55s ease both;
+}
+
+.movie-card,
+.pick-card{
+    animation:cardIn .45s ease both;
+}
+
+.movie-card:nth-child(2),
+.pick-card:nth-child(2){animation-delay:.04s}
+.movie-card:nth-child(3),
+.pick-card:nth-child(3){animation-delay:.08s}
+.movie-card:nth-child(4),
+.pick-card:nth-child(4){animation-delay:.12s}
+.movie-card:nth-child(5),
+.pick-card:nth-child(5){animation-delay:.16s}
+.movie-card:nth-child(6),
+.pick-card:nth-child(6){animation-delay:.20s}
+.movie-card:nth-child(7),
+.pick-card:nth-child(7){animation-delay:.24s}
+.movie-card:nth-child(8),
+.pick-card:nth-child(8){animation-delay:.28s}
+.movie-card:nth-child(9),
+.pick-card:nth-child(9){animation-delay:.32s}
+.movie-card:nth-child(10),
+.pick-card:nth-child(10){animation-delay:.36s}
+
+@media(prefers-reduced-motion:reduce){
+    *,
+    *::before,
+    *::after{
+        animation-duration:.01ms !important;
+        animation-iteration-count:1 !important;
+        transition-duration:.01ms !important;
+    }
 }
 
 
@@ -142,32 +203,43 @@ button{
 
 .hero{
     text-align:center;
-    padding:58px 10px 32px;
+    padding:62px 10px 38px;
+}
+
+.hero-brand{
+    width:54px;
+    height:54px;
+    margin:0 auto 20px;
+    display:grid;
+    place-items:center;
+    border:1px solid rgba(120,195,255,.34);
+    border-radius:16px;
+    background:linear-gradient(145deg, rgba(20,70,130,.72), rgba(2,15,34,.78));
+    box-shadow:0 12px 40px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.10);
+    backdrop-filter:blur(12px);
+}
+
+.hero-brand svg{
+    width:31px;
+    height:31px;
+    fill:none;
+    stroke:#9edbff;
+    stroke-width:1.8;
+    filter:drop-shadow(0 0 10px rgba(80,175,255,.35));
 }
 
 .hero h1{
-    margin:18px 0 10px;
-
+    margin:0 0 12px;
     font-size:clamp(54px,10vw,104px);
     line-height:.86;
     letter-spacing:-.055em;
     font-weight:950;
-
-    text-shadow:
-        0 10px 50px rgba(0,0,0,.55);
+    text-shadow:0 12px 55px rgba(0,0,0,.62);
 }
 
 .hero h1 span{
     display:block;
-
-    background:
-        linear-gradient(
-            180deg,
-            #fff 0%,
-            #8bd1ff 35%,
-            #398fff 100%
-        );
-
+    background:linear-gradient(180deg,#fff 0%,#9bd8ff 35%,#3d91ff 100%);
     -webkit-background-clip:text;
     background-clip:text;
     -webkit-text-fill-color:transparent;
@@ -176,25 +248,21 @@ button{
 .hero p{
     max-width:650px;
     margin:20px auto 0;
-
-    color:rgba(225,235,250,.78);
-
+    color:rgba(235,244,255,.82);
     font-size:16px;
     line-height:1.65;
 }
 
 .creator{
-    margin-top:16px;
-
-    color:rgba(230,239,250,.78);
-
-    font-size:15px;
+    margin-top:15px;
+    color:rgba(230,239,250,.72);
+    font-size:14px;
+    letter-spacing:.02em;
 }
 
 .creator strong{
-    color:#62b9ff;
+    color:#76c6ff;
 }
-
 
 /* =========================
    MAIN BOX
@@ -207,16 +275,13 @@ button{
     border-radius:22px;
 
     background:
-        linear-gradient(
-            145deg,
-            rgba(3,15,31,.91),
-            rgba(4,17,35,.82)
-        );
+        linear-gradient(145deg, rgba(3,15,31,.84), rgba(4,17,35,.68));
 
     box-shadow:
-        0 30px 80px rgba(0,0,0,.42);
+        0 28px 80px rgba(0,0,0,.42),
+        inset 0 1px 0 rgba(255,255,255,.045);
 
-    backdrop-filter:blur(16px);
+    backdrop-filter:blur(18px) saturate(125%);
 }
 
 .box h2{
@@ -332,22 +397,59 @@ button{
 ========================= */
 
 .results{
-    margin-top:30px;
+    margin-top:34px;
+}
+
+.results h2{
+    margin:0 0 18px;
+    font-size:clamp(23px,3.5vw,30px);
+    letter-spacing:-.02em;
+    text-shadow:0 8px 30px rgba(0,0,0,.45);
 }
 
 .loading{
-    padding:50px;
-
+    padding:42px 24px;
     text-align:center;
-
-    border:
-        1px solid
-        rgba(85,165,255,.2);
-
+    border:1px solid rgba(95,175,255,.18);
     border-radius:18px;
+    background:rgba(2,10,23,.52);
+    backdrop-filter:blur(10px);
+}
 
-    background:
-        rgba(3,15,31,.78);
+.loading p{
+    margin:0;
+    color:rgba(225,238,255,.72);
+    font-size:13px;
+    letter-spacing:.05em;
+}
+
+.loading-label{
+    margin:0 0 9px;
+    color:#8fd5ff;
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:.18em;
+}
+
+.loading-steps{
+    height:22px;
+    overflow:hidden;
+    margin-top:8px;
+}
+
+.loading-steps span{
+    display:block;
+    animation:loadingSteps 7.2s infinite;
+    color:rgba(225,238,255,.68);
+    font-size:12px;
+}
+
+@keyframes loadingSteps{
+    0%,20%{transform:translateY(0);opacity:1}
+    25%,45%{transform:translateY(-22px);opacity:1}
+    50%,70%{transform:translateY(-44px);opacity:1}
+    75%,95%{transform:translateY(-66px);opacity:1}
+    100%{transform:translateY(-88px);opacity:1}
 }
 
 .spinner{
@@ -385,33 +487,46 @@ button{
 }
 
 .movie-card{
+    position:relative;
     display:flex;
-
     gap:16px;
-
-    padding:15px;
-
+    padding:14px;
     min-height:180px;
+    border:1px solid rgba(120,190,255,.18);
+    border-radius:17px;
+    background:linear-gradient(145deg, rgba(3,13,28,.74), rgba(3,12,25,.58));
+    box-shadow:0 16px 38px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.035);
+    backdrop-filter:blur(8px);
+    overflow:hidden;
+    transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
 
-    border:
-        1px solid
-        rgba(90,165,255,.2);
+.movie-card:before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:linear-gradient(115deg, rgba(80,175,255,.06), transparent 38%);
+}
 
-    border-radius:16px;
-
-    background:
-        rgba(3,15,31,.82);
+.movie-card:hover{
+    transform:translateY(-4px);
+    border-color:rgba(105,190,255,.38);
+    box-shadow:0 22px 48px rgba(0,0,0,.38), 0 0 24px rgba(30,120,230,.08);
 }
 
 .movie-card img{
     width:105px;
     height:158px;
-
     object-fit:cover;
-
-    border-radius:9px;
-
+    border-radius:10px;
     flex:none;
+    box-shadow:0 10px 25px rgba(0,0,0,.38);
+    transition:transform .35s ease;
+}
+
+.movie-card:hover img{
+    transform:scale(1.025);
 }
 
 .movie-info{
@@ -466,15 +581,33 @@ button{
 ========================= */
 
 .picks-header{
+    position:relative;
     display:flex;
-
-    align-items:center;
-
+    align-items:flex-end;
     justify-content:space-between;
+    gap:18px;
+    margin-bottom:24px;
+}
 
-    gap:15px;
+.picks-header:after{
+    content:"PERSONAL LETTERBOXD SELECTION";
+    position:absolute;
+    margin-top:52px;
+    color:rgba(190,220,250,.42);
+    font-size:9px;
+    font-weight:900;
+    letter-spacing:.16em;
+}
 
-    margin-bottom:25px;
+.picks-header h2{
+    margin:0;
+    font-size:clamp(25px,4vw,34px);
+    letter-spacing:-.025em;
+    text-shadow:0 8px 30px rgba(0,0,0,.48);
+}
+
+.picks-shell{
+    padding-top:6px;
 }
 
 .picks-header h2{
@@ -483,18 +616,20 @@ button{
 
 .picks-header select{
     min-width:210px;
-
     padding:12px 14px;
-
-    border:
-        1px solid
-        rgba(90,165,245,.3);
-
-    border-radius:10px;
-
+    border:1px solid rgba(100,180,255,.28);
+    border-radius:12px;
     color:#fff;
+    background:rgba(2,12,27,.72);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+    backdrop-filter:blur(12px);
+    outline:none;
+    cursor:pointer;
+}
 
-    background:#071426;
+.picks-header select:focus{
+    border-color:rgba(110,195,255,.52);
+    box-shadow:0 0 0 3px rgba(50,140,255,.10);
 }
 
 .picks-grid{
@@ -507,24 +642,25 @@ button{
 }
 
 .pick-card{
+    position:relative;
     display:flex;
-
     align-items:center;
-
     gap:12px;
-
     min-height:150px;
-
     padding:12px;
+    border:1px solid rgba(120,190,255,.17);
+    border-radius:16px;
+    background:linear-gradient(145deg, rgba(3,13,28,.76), rgba(3,12,25,.58));
+    box-shadow:0 16px 38px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.035);
+    backdrop-filter:blur(8px);
+    overflow:hidden;
+    transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
 
-    border:
-        1px solid
-        rgba(90,165,255,.2);
-
-    border-radius:15px;
-
-    background:
-        rgba(3,15,31,.82);
+.pick-card:hover{
+    transform:translateY(-4px);
+    border-color:rgba(105,190,255,.38);
+    box-shadow:0 22px 48px rgba(0,0,0,.38), 0 0 24px rgba(30,120,230,.08);
 }
 
 .pick-poster{
@@ -538,6 +674,7 @@ button{
     flex:none;
 
     background:#071426;
+    box-shadow:0 10px 25px rgba(0,0,0,.38);
 }
 
 .pick-poster-fallback{
@@ -644,6 +781,36 @@ button{
 
 
 /* =========================
+   FOOTER / BRAND DETAILS
+========================= */
+
+.site-footer{
+    margin-top:55px;
+    padding:28px 10px 8px;
+    text-align:center;
+    border-top:1px solid rgba(110,185,255,.12);
+}
+
+.footer-brand{
+    color:rgba(235,245,255,.88);
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:.18em;
+}
+
+.footer-credit{
+    margin-top:8px;
+    color:rgba(210,228,248,.48);
+    font-size:11px;
+}
+
+.footer-copy{
+    margin-top:13px;
+    color:rgba(190,215,240,.32);
+    font-size:10px;
+}
+
+/* =========================
    TMDB
 ========================= */
 
@@ -676,8 +843,8 @@ button{
 
     .picks-header{
         align-items:stretch;
-
         flex-direction:column;
+        padding-bottom:26px;
     }
 
     .picks-header select{
@@ -760,6 +927,16 @@ button{
 ========================= -->
 
 <section class="hero">
+
+    <div class="hero-brand" aria-hidden="true">
+        <svg viewBox="0 0 32 32">
+            <circle cx="16" cy="16" r="11.5"></circle>
+            <circle cx="16" cy="16" r="3.2"></circle>
+            <circle cx="16" cy="8.8" r="2.1"></circle>
+            <circle cx="9.8" cy="20" r="2.1"></circle>
+            <circle cx="22.2" cy="20" r="2.1"></circle>
+        </svg>
+    </div>
 
     <h1>
         MOVIE
@@ -997,9 +1174,15 @@ button{
 
             <div class="spinner"></div>
 
-            <p>
-                MovieMind is searching the stars...
-            </p>
+            <div class="loading-label">MOVIEMIND AI</div>
+
+            <div class="loading-steps" aria-live="polite">
+                <span>Analyzing your preferences...</span>
+                <span>Finding cinematic matches...</span>
+                <span>Comparing films...</span>
+                <span>Building your recommendations...</span>
+                <span>Almost ready...</span>
+            </div>
 
         </div>
 
@@ -1024,7 +1207,7 @@ button{
     class="mode-content"
 >
 
-    <div class="box">
+    <div class="picks-shell">
 
         <div class="picks-header">
 
@@ -1090,12 +1273,24 @@ button{
 </section>
 
 
-<div class="tmdb">
+<footer class="site-footer">
 
-    This product uses the TMDB API
-    but is not endorsed or certified by TMDB.
+    <div class="footer-brand">MOVIEMIND</div>
 
-</div>
+    <div class="footer-credit">
+        AI-powered movie discovery · Created by Panayiotis Kouzaris
+    </div>
+
+    <div class="tmdb">
+        This product uses the TMDB API
+        but is not endorsed or certified by TMDB.
+    </div>
+
+    <div class="footer-copy">
+        © 2026 MovieMind
+    </div>
+
+</footer>
 
 
 </main>
