@@ -12,25 +12,24 @@
 <style>
 
 /* =====================================================
-   TOKENS
-   Color   — near-black house floor, oxblood velvet, brass/marquee gold, parchment ink
-   Type    — Fraunces (display, editorial cinema-poster serif) / Inter (body, UI)
-   Layout  — centered column, ticket/marquee structural motifs used where content is actually ranked or sequential
+   TOKENS — warm projector-amber over the poster-wall photo,
+   deep ember shadows, brass gold highlights, film-reel motifs
 ===================================================== */
 :root{
-  --ink:#f4ece0;
-  --ink-dim:rgba(244,236,224,.62);
-  --ink-faint:rgba(244,236,224,.38);
-  --floor:#0c0908;
-  --floor-2:#130f0d;
-  --velvet:#5c1a20;
-  --velvet-bright:#8c2b32;
-  --gold:#cf9d4a;
-  --gold-bright:#e8c274;
-  --line:rgba(244,236,224,.14);
-  --card:rgba(244,236,224,.045);
-  --radius-lg:22px;
-  --radius-md:14px;
+  --mouse-x:50%; --mouse-y:50%;
+  --bg-x:0px; --bg-y:0px;
+  --ink:#f6efe2;
+  --ink-dim:rgba(246,239,226,.68);
+  --ink-faint:rgba(246,239,226,.42);
+  --floor:#070502;
+  --panel:rgba(10,7,4,.62);
+  --panel-soft:rgba(14,10,6,.42);
+  --ember:#c1502b;
+  --gold:#d99a3e;
+  --gold-bright:#f3c169;
+  --line:rgba(246,224,180,.16);
+  --radius-lg:26px;
+  --radius-md:16px;
   --serif:'Fraunces',ui-serif,Georgia,serif;
   --sans:'Inter',ui-sans-serif,system-ui,-apple-system,sans-serif;
 }
@@ -38,32 +37,46 @@
 html{scroll-behavior:smooth}
 body{
   margin:0;min-height:100vh;color:var(--ink);font-family:var(--sans);
-  background:
-    radial-gradient(ellipse 900px 500px at 50% -10%, rgba(140,43,50,.30), transparent 60%),
-    var(--floor);
-  overflow-x:hidden;
+  background:var(--floor);overflow-x:hidden;
 }
-/* subtle film-grain texture, cinema over "tech glow" */
+/* the poster-wall photograph, kept as the set backdrop, with cursor parallax */
 body::before{
-  content:"";position:fixed;inset:0;z-index:-5;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+  content:"";position:fixed;inset:-6%;z-index:-10;pointer-events:none;
+  background:
+    linear-gradient(180deg, rgba(5,3,1,.20), rgba(4,2,1,.55) 55%, rgba(2,1,1,.86)),
+    url("IMG_1106.png") center/cover no-repeat;
+  transform:translate3d(var(--bg-x),var(--bg-y),0) scale(1.08);
+  will-change:transform;
+}
+/* warm projector-beam spotlight that follows the cursor, plus a bottom vignette for text legibility */
+body::after{
+  content:"";position:fixed;inset:0;z-index:-9;pointer-events:none;
+  background:
+    radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(243,193,105,.14), transparent 30%),
+    radial-gradient(ellipse 1200px 700px at 50% 100%, rgba(2,1,1,.75), transparent 60%);
+}
+/* fine film grain for texture */
+.grain{
+  position:fixed;inset:0;z-index:-8;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
 }
 .container{width:min(1120px,calc(100% - 32px));margin:auto;padding:20px 0 90px}
 
 /* =====================================================
-   NAV — mode switch
+   NAV
 ===================================================== */
 .mode-switch{
   position:sticky;top:16px;z-index:100;width:max-content;margin:0 auto 8px;
   display:flex;gap:4px;padding:5px;border:1px solid var(--line);border-radius:999px;
-  background:rgba(12,9,8,.82);backdrop-filter:blur(16px);
+  background:rgba(6,4,2,.72);backdrop-filter:blur(20px);
+  box-shadow:0 20px 55px rgba(0,0,0,.5);
 }
 .mode-button{
   border:0;border-radius:999px;padding:10px 20px;color:var(--ink-dim);background:transparent;
   font:600 13px/1 var(--sans);letter-spacing:.01em;cursor:pointer;transition:.25s ease;
 }
 .mode-button:hover{color:var(--ink)}
-.mode-button.active{color:var(--floor);background:linear-gradient(135deg,var(--gold-bright),var(--gold));font-weight:700}
+.mode-button.active{color:#241206;background:linear-gradient(135deg,var(--gold-bright),var(--gold));font-weight:700;box-shadow:0 6px 18px rgba(217,154,62,.35)}
 .mode-content{display:none}
 .mode-content.active{display:block}
 
@@ -77,26 +90,58 @@ body::before{
 .eyebrow{
   display:inline-flex;align-items:center;gap:10px;color:var(--gold-bright);
   font:600 13px/1 var(--sans);letter-spacing:.02em;
+  text-shadow:0 2px 12px rgba(0,0,0,.6);
 }
 .eyebrow::before,.eyebrow::after{content:"";width:26px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
-.hero h1{
-  margin:22px 0 0;font-family:var(--serif);font-weight:600;font-size:clamp(58px,11vw,132px);
-  line-height:.92;letter-spacing:-.01em;color:var(--ink);
+
+.hero-stage{position:relative;display:flex;align-items:center;justify-content:center}
+
+/* a real spinning 3-D film reel, built from stacked circles + perspective, sitting behind the title */
+.reel{
+  position:absolute;left:50%;top:50%;width:clamp(260px,32vw,420px);height:clamp(260px,32vw,420px);
+  transform:translate(-50%,-50%);perspective:900px;pointer-events:none;z-index:-1;opacity:.5;
 }
-.hero h1 em{font-style:italic;font-weight:500;color:var(--gold-bright)}
-.hero p{max-width:560px;margin:24px auto 0;color:var(--ink-dim);font-size:clamp(15px,1.8vw,18px);line-height:1.65}
+.reel-disc{
+  position:absolute;inset:0;border-radius:50%;
+  background:
+    radial-gradient(circle at 50% 50%, transparent 0 18%, rgba(217,154,62,.16) 18.4% 20%, transparent 20.4% 30%, rgba(217,154,62,.10) 30.4% 32%, transparent 32.4%),
+    conic-gradient(from 0deg, rgba(217,154,62,.22), transparent 12%, rgba(217,154,62,.22) 25%, transparent 37%, rgba(217,154,62,.22) 50%, transparent 62%, rgba(217,154,62,.22) 75%, transparent 87%, rgba(217,154,62,.22));
+  border:2px solid rgba(217,154,62,.28);
+  transform-style:preserve-3d;transform:rotateX(58deg) rotateZ(0deg);
+  animation:reelSpin 26s linear infinite;
+  box-shadow:0 40px 90px rgba(0,0,0,.5), inset 0 0 60px rgba(0,0,0,.4);
+}
+.reel-hub{
+  position:absolute;left:50%;top:50%;width:16%;height:16%;transform:translate(-50%,-50%);
+  border-radius:50%;background:radial-gradient(circle, var(--gold-bright), var(--ember) 80%);
+  box-shadow:0 0 30px rgba(243,193,105,.4);
+}
+@keyframes reelSpin{to{transform:rotateX(58deg) rotateZ(360deg)}}
+
+.hero h1{
+  position:relative;margin:22px 0 0;font-family:var(--serif);font-weight:600;
+  font-size:clamp(58px,11vw,132px);line-height:.92;letter-spacing:-.01em;color:var(--ink);
+  text-shadow:
+    0 1px 0 rgba(0,0,0,.5),
+    0 12px 30px rgba(0,0,0,.65),
+    0 2px 40px rgba(217,154,62,.18);
+}
+.hero h1 em{
+  font-style:italic;font-weight:500;
+  background:linear-gradient(180deg,var(--gold-bright),var(--ember));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero p{max-width:560px;margin:24px auto 0;color:var(--ink-dim);font-size:clamp(15px,1.8vw,18px);line-height:1.65;text-shadow:0 2px 10px rgba(0,0,0,.5)}
 .creator{margin-top:16px;color:var(--ink-faint);font-size:13px}
 .creator strong{color:var(--gold-bright);font-weight:600}
 
-/* marquee light strip — single deliberate animated moment, thematically a real marquee */
 .marquee-strip{
   display:flex;gap:10px;margin-top:34px;padding:10px 18px;border-radius:999px;
-  background:var(--floor-2);border:1px solid var(--line);
+  background:rgba(6,4,2,.6);border:1px solid var(--line);backdrop-filter:blur(10px);
 }
 .marquee-strip i{
   width:6px;height:6px;border-radius:50%;background:var(--gold);
-  box-shadow:0 0 8px rgba(207,157,74,.7);
-  animation:bulbChase 2.4s linear infinite;
+  box-shadow:0 0 8px rgba(217,154,62,.75);animation:bulbChase 2.4s linear infinite;
 }
 .marquee-strip i:nth-child(1){animation-delay:0s}
 .marquee-strip i:nth-child(2){animation-delay:.15s}
@@ -116,14 +161,19 @@ body::before{
 @keyframes exploreLine{0%,100%{opacity:.3;transform:scaleY(.6)}50%{opacity:1;transform:scaleY(1)}}
 
 /* =====================================================
-   AI RECOMMENDER PANEL
+   AI RECOMMENDER PANEL — deep 3-D glass card that tilts toward the pointer
 ===================================================== */
-.ai-section{padding:20px 0 30px}
+.ai-section{padding:20px 0 30px;perspective:1800px}
 .ai-interface{
+  --rx:0deg;--ry:0deg;
   position:relative;padding:clamp(24px,4.5vw,44px);border:1px solid var(--line);
-  border-radius:var(--radius-lg);
-  background:linear-gradient(155deg, rgba(92,26,32,.22), rgba(19,15,13,.5) 55%);
-  box-shadow:0 40px 100px rgba(0,0,0,.45), inset 0 1px rgba(244,236,224,.06);
+  border-radius:var(--radius-lg);background:var(--panel);backdrop-filter:blur(26px);
+  transform-style:preserve-3d;transform:rotateX(var(--rx)) rotateY(var(--ry));
+  transition:transform .15s ease-out, box-shadow .3s ease;
+  box-shadow:
+    0 60px 120px rgba(0,0,0,.55),
+    0 2px 0 rgba(255,255,255,.04) inset,
+    0 0 0 1px rgba(217,154,62,.06) inset;
 }
 .ai-top{display:flex;justify-content:space-between;align-items:flex-end;gap:28px;margin-bottom:34px}
 .ai-kicker{color:var(--gold-bright);font:700 12px/1 var(--sans);letter-spacing:.02em;margin-bottom:10px}
@@ -133,16 +183,18 @@ body::before{
 .ai-controls{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
 .control{
   position:relative;padding:18px 18px 16px;border:1px solid var(--line);border-radius:var(--radius-md);
-  background:rgba(244,236,224,.035);transition:border-color .25s ease, transform .25s ease;
+  background:linear-gradient(155deg, rgba(217,154,62,.08), var(--panel-soft));
+  box-shadow:0 18px 40px rgba(0,0,0,.3), inset 0 1px rgba(255,255,255,.04);
+  transition:border-color .25s ease, transform .25s ease;
 }
-.control:hover{border-color:rgba(207,157,74,.4);transform:translateY(-2px)}
+.control:hover{border-color:rgba(217,154,62,.45);transform:translateY(-3px)}
 .control-label{display:flex;align-items:center;gap:8px;margin-bottom:11px;color:var(--ink-faint);font:700 11px/1 var(--sans);letter-spacing:.02em}
-.control-label::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--gold)}
+.control-label svg{width:13px;height:13px;flex:none;color:var(--gold)}
 .digital-select{
   width:100%;appearance:none;-webkit-appearance:none;border:0;outline:0;background:transparent;
   color:var(--ink);font:700 16px/1.2 var(--sans);letter-spacing:-.01em;cursor:pointer;padding-right:22px;
 }
-.digital-select option{background:#1a1412;color:var(--ink)}
+.digital-select option{background:#1a1109;color:var(--ink)}
 .control::after{
   content:"";position:absolute;right:18px;bottom:20px;width:7px;height:7px;
   border-right:1.5px solid var(--gold);border-bottom:1.5px solid var(--gold);transform:rotate(45deg);pointer-events:none;
@@ -156,20 +208,20 @@ body::before{
 .favorite-input::before{content:"+";position:absolute;left:16px;top:50%;transform:translateY(-54%);color:var(--gold);font-size:17px;font-weight:300;pointer-events:none}
 .favorite-input input{
   width:100%;height:52px;padding:0 16px 0 40px;border:1px solid var(--line);border-radius:999px;
-  outline:none;color:var(--ink);background:rgba(9,7,6,.5);font-size:13px;font-weight:500;
+  outline:none;color:var(--ink);background:rgba(4,2,1,.55);font-size:13px;font-weight:500;
   transition:border-color .25s ease, background .25s ease;
 }
 .favorite-input input::placeholder{color:var(--ink-faint)}
-.favorite-input input:hover{background:rgba(9,7,6,.7)}
-.favorite-input input:focus{border-color:var(--gold);background:rgba(9,7,6,.85)}
+.favorite-input input:hover{background:rgba(4,2,1,.75)}
+.favorite-input input:focus{border-color:var(--gold);background:rgba(4,2,1,.9)}
 
 .find-button{
   position:relative;overflow:hidden;width:100%;min-height:60px;margin-top:24px;border:0;border-radius:999px;
-  color:var(--floor);background:linear-gradient(120deg,var(--gold-bright),var(--gold) 60%,#b7863c);
+  color:#241206;background:linear-gradient(120deg,var(--gold-bright),var(--gold) 60%,var(--ember));
   font:800 13px/1 var(--sans);letter-spacing:.03em;cursor:pointer;transition:transform .25s ease, box-shadow .25s ease;
-  box-shadow:0 16px 40px rgba(207,157,74,.22);
+  box-shadow:0 20px 50px rgba(217,154,62,.28), inset 0 1px rgba(255,255,255,.35);
 }
-.find-button:hover{transform:translateY(-2px);box-shadow:0 22px 55px rgba(207,157,74,.32)}
+.find-button:hover{transform:translateY(-2px);box-shadow:0 26px 65px rgba(217,154,62,.4), inset 0 1px rgba(255,255,255,.4)}
 .find-button:disabled{opacity:.65;cursor:wait}
 .find-button:focus-visible,.mode-button:focus-visible,.digital-select:focus-visible,.category-select:focus-visible{outline:2px solid var(--gold-bright);outline-offset:2px}
 
@@ -177,69 +229,71 @@ body::before{
    RESULTS
 ===================================================== */
 .results{margin-top:64px}
-.results h2{margin-bottom:22px;font-family:var(--serif);font-weight:600;font-size:clamp(26px,4vw,38px)}
-.loading{padding:46px;text-align:center;border:1px solid var(--line);border-radius:var(--radius-lg);background:rgba(19,15,13,.5)}
+.results h2{margin-bottom:22px;font-family:var(--serif);font-weight:600;font-size:clamp(26px,4vw,38px);text-shadow:0 2px 14px rgba(0,0,0,.5)}
+.loading{padding:46px;text-align:center;border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--panel);backdrop-filter:blur(20px)}
 .spinner{width:36px;height:36px;margin:0 auto 14px;border:2px solid var(--line);border-top-color:var(--gold-bright);border-radius:50%;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-.movie-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.movie-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;perspective:1600px}
 .movie-card{
+  --rx:0deg;--ry:0deg;
   position:relative;display:flex;gap:16px;min-height:180px;padding:14px;border:1px solid var(--line);
-  border-radius:var(--radius-md);background:rgba(244,236,224,.035);
-  transition:transform .3s ease, border-color .3s ease;
+  border-radius:var(--radius-md);background:var(--panel);backdrop-filter:blur(16px);
+  transform-style:preserve-3d;transform:rotateX(var(--rx)) rotateY(var(--ry));
+  transition:transform .15s ease-out, border-color .3s ease, box-shadow .3s ease;
+  box-shadow:0 30px 60px rgba(0,0,0,.4);
 }
-.movie-card:hover{transform:translateY(-5px);border-color:rgba(207,157,74,.35)}
-.movie-card img{width:104px;height:154px;object-fit:cover;border-radius:8px;flex:none;box-shadow:0 16px 30px rgba(0,0,0,.45)}
-.movie-info{min-width:0;align-self:center}
+.movie-card.tilting{border-color:rgba(217,154,62,.4);box-shadow:0 40px 80px rgba(0,0,0,.5)}
+.movie-card img{width:104px;height:154px;object-fit:cover;border-radius:8px;flex:none;box-shadow:0 16px 30px rgba(0,0,0,.5);transform:translateZ(24px)}
+.movie-info{min-width:0;align-self:center;transform:translateZ(14px)}
 .movie-info h3{margin:0 0 6px;font-family:var(--serif);font-weight:600;font-size:19px}
 .movie-meta{margin-bottom:8px;color:var(--gold-bright);font-size:12px;font-weight:600}
-.movie-rating{display:inline-block;margin-bottom:8px;padding:4px 9px;border-radius:999px;background:rgba(207,157,74,.14);color:var(--gold-bright);font-size:11px;font-weight:700}
+.movie-rating{display:inline-block;margin-bottom:8px;padding:4px 9px;border-radius:999px;background:rgba(217,154,62,.16);color:var(--gold-bright);font-size:11px;font-weight:700}
 .movie-reason{color:var(--ink-dim);font-size:13px;line-height:1.55}
 
 /* =====================================================
-   PANAYIOTIS' PICKS — numbered ranking is a genuine sequence, so numbering earns its keep
+   PANAYIOTIS' PICKS
 ===================================================== */
 #picksMode{padding-top:56px}
 .picks-top{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;margin-bottom:32px}
 .section-kicker{color:var(--gold-bright);font:700 12px/1 var(--sans);letter-spacing:.02em;margin-bottom:10px}
-.section-title{margin:0;font-family:var(--serif);font-weight:600;font-size:clamp(30px,5vw,52px);line-height:1}
+.section-title{margin:0;font-family:var(--serif);font-weight:600;font-size:clamp(30px,5vw,52px);line-height:1;text-shadow:0 4px 20px rgba(0,0,0,.5)}
 .category-select{
   min-width:210px;padding:13px 16px;border:1px solid var(--line);border-radius:12px;color:var(--ink);
-  background:rgba(19,15,13,.6);outline:none;cursor:pointer;font:600 14px/1 var(--sans);
+  background:rgba(6,4,2,.65);outline:none;cursor:pointer;font:600 14px/1 var(--sans);backdrop-filter:blur(10px);
 }
-.category-select option{background:#1a1412;color:var(--ink)}
+.category-select option{background:#1a1109;color:var(--ink)}
 
 .picks-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;perspective:1600px}
 .pick-card{
   --rx:0deg;--ry:0deg;--px:0px;--py:0px;--shine-x:50%;--shine-y:50%;
   position:relative;display:flex;align-items:center;gap:14px;min-height:164px;padding:13px;
-  border:1px solid var(--line);border-radius:20px;
-  background:linear-gradient(135deg, rgba(92,26,32,.20), rgba(19,15,13,.55));
+  border:1px solid var(--line);border-radius:20px;background:var(--panel);backdrop-filter:blur(16px);
   transform-style:preserve-3d;
   transform:rotateX(var(--rx)) rotateY(var(--ry)) translate3d(var(--px),var(--py),0);
-  transition:transform .12s ease-out, border-color .3s ease;
-  overflow:hidden;
+  transition:transform .12s ease-out, border-color .3s ease, box-shadow .3s ease;
+  overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.4);
 }
-.pick-card::before{content:"";position:absolute;inset:-20%;pointer-events:none;background:radial-gradient(circle at var(--shine-x) var(--shine-y), rgba(207,157,74,.18), transparent 26%)}
-.pick-card.tilting{border-color:rgba(207,157,74,.4)}
-.pick-poster{width:96px;height:142px;object-fit:cover;border-radius:8px;flex:none;background:#1a1412;box-shadow:0 18px 32px rgba(0,0,0,.5);transform:translateZ(30px);position:relative;z-index:2}
+.pick-card::before{content:"";position:absolute;inset:-20%;pointer-events:none;background:radial-gradient(circle at var(--shine-x) var(--shine-y), rgba(217,154,62,.2), transparent 26%)}
+.pick-card.tilting{border-color:rgba(217,154,62,.45);box-shadow:0 45px 90px rgba(0,0,0,.55)}
+.pick-poster{width:96px;height:142px;object-fit:cover;border-radius:8px;flex:none;background:#1a1109;box-shadow:0 20px 36px rgba(0,0,0,.55);transform:translateZ(34px);position:relative;z-index:2}
 .pick-rank{
   width:32px;height:32px;display:flex;align-items:center;justify-content:center;flex:none;
-  border:1px solid rgba(207,157,74,.3);border-radius:50%;background:rgba(207,157,74,.12);
-  color:var(--gold-bright);font:800 10px/1 var(--sans);transform:translateZ(40px);
+  border:1px solid rgba(217,154,62,.35);border-radius:50%;background:rgba(217,154,62,.14);
+  color:var(--gold-bright);font:800 10px/1 var(--sans);transform:translateZ(44px);
 }
-.pick-info{min-width:0;flex:1;position:relative;z-index:3;transform:translateZ(30px)}
+.pick-info{min-width:0;flex:1;position:relative;z-index:3;transform:translateZ(32px)}
 .pick-title{margin:0 0 5px;font-family:var(--serif);font-weight:600;font-size:17px;line-height:1.2}
 .pick-year{color:var(--ink-faint);font-size:12px}
 .pick-tmdb{display:inline-block;margin-top:9px;color:var(--gold-bright);font-size:11px;font-weight:700;text-decoration:none}
 .pick-tmdb:hover{text-decoration:underline}
-.pick-rating{min-width:60px;text-align:right;color:var(--gold-bright);font-size:12px;font-weight:800;transform:translateZ(40px)}
+.pick-rating{min-width:60px;text-align:right;color:var(--gold-bright);font-size:12px;font-weight:800;transform:translateZ(44px)}
 
 /* =====================================================
    FOOTER / ERROR
 ===================================================== */
 .tmdb{margin-top:70px;padding-top:22px;text-align:center;color:var(--ink-faint);font-size:11px;border-top:1px solid var(--line)}
-.error-box{padding:16px;border:1px solid rgba(140,43,50,.5);border-radius:14px;background:rgba(92,26,32,.25);color:#f2c2c2}
+.error-box{padding:16px;border:1px solid rgba(193,80,43,.5);border-radius:14px;background:rgba(193,80,43,.2);color:#f4cbb8}
 
 /* =====================================================
    MOBILE
@@ -253,6 +307,7 @@ body::before{
   .ai-controls,.favorite-grid,.movie-grid,.picks-grid{grid-template-columns:1fr}
   .picks-top{align-items:stretch;flex-direction:column}
   .category-select{width:100%}
+  .reel{opacity:.32}
 }
 @media(max-width:520px){
   .hero h1{font-size:clamp(50px,20vw,90px)}
@@ -269,6 +324,8 @@ body::before{
 </head>
 <body>
 
+<div class="grain"></div>
+
 <div class="container">
 
 <nav class="mode-switch">
@@ -278,7 +335,13 @@ body::before{
 
 <section class="hero">
   <div class="eyebrow">Personalized movie discovery</div>
-  <h1>Movie<br><em>Mind</em></h1>
+  <div class="hero-stage">
+    <div class="reel" aria-hidden="true">
+      <div class="reel-disc"></div>
+      <div class="reel-hub"></div>
+    </div>
+    <h1>Movie<br><em>Mind</em></h1>
+  </div>
   <p>Tell it what you're drawn to, and it finds your next film — built around your taste, not a trending chart.</p>
   <div class="creator">Created by <strong>Panayiotis Kouzaris</strong></div>
   <div class="marquee-strip" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
@@ -286,7 +349,7 @@ body::before{
 </section>
 
 <section id="aiMode" class="mode-content active ai-section">
-<div class="ai-interface">
+<div class="ai-interface" id="aiInterface">
   <div class="ai-top">
     <div>
       <div class="ai-kicker">Movie intelligence</div>
@@ -297,7 +360,10 @@ body::before{
 
   <div class="ai-controls">
     <div class="control">
-      <div class="control-label">Genre</div>
+      <div class="control-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v4l-3 3 3 3v6H4v-6l3-3-3-3V4z"/></svg>
+        Genre
+      </div>
       <select id="genre" class="digital-select">
         <option value="science fiction">Science Fiction</option>
         <option value="thriller">Thriller</option>
@@ -313,7 +379,10 @@ body::before{
       </select>
     </div>
     <div class="control">
-      <div class="control-label">Release Period</div>
+      <div class="control-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
+        Release Period
+      </div>
       <select id="period" class="digital-select">
         <option value="2020-2027">2020–2027</option>
         <option value="2010-2020">2010–2020</option>
@@ -325,7 +394,10 @@ body::before{
       </select>
     </div>
     <div class="control">
-      <div class="control-label">Plot Twist</div>
+      <div class="control-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7c2-3 14-3 16 0M20 17c-2 3-14 3-16 0"/><path d="M4 4v3h3M20 20v-3h-3"/></svg>
+        Plot Twist
+      </div>
       <select id="plotTwist" class="digital-select">
         <option value="yes">Yes</option>
         <option value="no">No</option>
@@ -465,6 +537,7 @@ async function findMovies(){
     `).join("");
 
     out.style.display = "grid";
+    initTilt(".movie-card", 6, 7);
   }catch(error){
     out.innerHTML = `<div class="error-box" style="grid-column:1/-1">${escapeHtml(error.message)}</div>`;
     out.style.display = "grid";
@@ -519,37 +592,41 @@ function displayPicks(){
     `;
   }).join("");
 
-  initialize3DCards();
+  initTilt(".pick-card", 7, 8, true);
 }
 document.getElementById("pickCategory").addEventListener("change", displayPicks);
 
-function initialize3DCards(){
-  const cards = document.querySelectorAll(".pick-card");
+/* generalized pointer-tilt 3-D effect, used on picks, results, and the recommender panel */
+function initTilt(selector, tiltX, tiltY, withShine){
   if(!window.matchMedia("(pointer:fine)").matches) return;
-
-  cards.forEach(card => {
+  document.querySelectorAll(selector).forEach(card => {
     card.addEventListener("pointermove", event => {
       const rect = card.getBoundingClientRect();
       const x = (event.clientX - rect.left) / rect.width - .5;
       const y = (event.clientY - rect.top) / rect.height - .5;
-      card.style.setProperty("--rx", `${(-y * 7).toFixed(2)}deg`);
-      card.style.setProperty("--ry", `${(x * 8).toFixed(2)}deg`);
-      card.style.setProperty("--px", `${(x * 4).toFixed(2)}px`);
-      card.style.setProperty("--py", `${(y * 4).toFixed(2)}px`);
-      card.style.setProperty("--shine-x", `${(x + .5) * 100}%`);
-      card.style.setProperty("--shine-y", `${(y + .5) * 100}%`);
+      card.style.setProperty("--rx", `${(-y * tiltX).toFixed(2)}deg`);
+      card.style.setProperty("--ry", `${(x * tiltY).toFixed(2)}deg`);
+      if(withShine){
+        card.style.setProperty("--px", `${(x * 4).toFixed(2)}px`);
+        card.style.setProperty("--py", `${(y * 4).toFixed(2)}px`);
+        card.style.setProperty("--shine-x", `${(x + .5) * 100}%`);
+        card.style.setProperty("--shine-y", `${(y + .5) * 100}%`);
+      }
       card.classList.add("tilting");
     }, {passive:true});
 
     card.addEventListener("pointerleave", () => {
       card.style.setProperty("--rx", "0deg");
       card.style.setProperty("--ry", "0deg");
-      card.style.setProperty("--px", "0px");
-      card.style.setProperty("--py", "0px");
+      if(withShine){
+        card.style.setProperty("--px", "0px");
+        card.style.setProperty("--py", "0px");
+      }
       card.classList.remove("tilting");
     }, {passive:true});
   });
 }
+initTilt("#aiInterface", 1.5, 2);
 
 function escapeHtml(value){
   return String(value ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
@@ -557,6 +634,30 @@ function escapeHtml(value){
 function escapeAttr(value){
   return String(value ?? "").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 }
+
+/* background + spotlight parallax, matches the original site's pointer-follow effect */
+(function(){
+  const root = document.documentElement;
+  if(!window.matchMedia("(pointer:fine)").matches) return;
+
+  let targetX = 0, targetY = 0, currentX = 0, currentY = 0;
+
+  window.addEventListener("pointermove", event => {
+    targetX = (event.clientX / window.innerWidth - .5) * -16;
+    targetY = (event.clientY / window.innerHeight - .5) * -11;
+    root.style.setProperty("--mouse-x", `${(event.clientX / window.innerWidth) * 100}%`);
+    root.style.setProperty("--mouse-y", `${(event.clientY / window.innerHeight) * 100}%`);
+  }, {passive:true});
+
+  function animate(){
+    currentX += (targetX - currentX) * .05;
+    currentY += (targetY - currentY) * .05;
+    root.style.setProperty("--bg-x", `${currentX.toFixed(2)}px`);
+    root.style.setProperty("--bg-y", `${currentY.toFixed(2)}px`);
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
 
 displayPicks();
 </script>
