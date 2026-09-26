@@ -3,1799 +3,100 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>MovieMind AI</title>
-
 <meta name="description" content="MovieMind AI — personalized movie recommendations created by Panayiotis Kouzaris.">
-
+<script src="./panayiotis-picks.js"></script>
 <style>
-
-*{
-    box-sizing:border-box;
-}
-
-html{
-    scroll-behavior:smooth;
-}
-
-body{
-    margin:0;
-    min-height:100vh;
-    color:#fff;
-    font-family:
-        Inter,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-    background:#020711;
-    overflow-x:hidden;
-}
-
-
-/* =========================
-   CINEMATIC 3-D BACKGROUND
-========================= */
-
-body:before{
-    content:"";
-    position:fixed;
-    inset:-4%;
-    pointer-events:none;
-    z-index:-3;
-
-    background:
-        linear-gradient(
-            rgba(2,7,17,.30),
-            rgba(2,7,17,.52)
-        ),
-        url("IMG_1106.png")
-        center/cover no-repeat;
-
-    transform:
-        translate3d(
-            var(--bg-x, 0px),
-            var(--bg-y, 0px),
-            0
-        )
-        scale(1.07);
-
-    will-change:transform;
-
-    transition:
-        transform .12s ease-out;
-}
-
-
-body:after{
-    content:"";
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    z-index:-2;
-
-    background:
-        radial-gradient(
-            ellipse at center,
-            transparent 25%,
-            rgba(0,0,0,.12) 55%,
-            rgba(0,0,0,.52) 100%
-        ),
-        linear-gradient(
-            115deg,
-            rgba(15,75,150,.08),
-            transparent 38%,
-            rgba(20,115,210,.06)
-        );
-}
-
-
-.cinematic-depth-glow{
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    z-index:-1;
-
-    background:
-        radial-gradient(
-            ellipse at 50% 45%,
-            rgba(40,125,220,.07),
-            transparent 52%
-        );
-}
-
-
-/* =========================
-   GENERAL
-========================= */
-
-button,
-select,
-input{
-    font:inherit;
-}
-
-button{
-    cursor:pointer;
-}
-
-.container{
-    width:min(
-        1050px,
-        calc(100% - 32px)
-    );
-
-    margin:auto;
-
-    padding:
-        42px
-        0
-        70px;
-}
-
-
-/* =========================
-   MODE SWITCH
-========================= */
-
-.mode-switch{
-    position:fixed;
-    top:18px;
-    left:18px;
-    z-index:50;
-
-    display:flex;
-    gap:6px;
-
-    padding:6px;
-
-    border:
-        1px solid
-        rgba(90,170,255,.28);
-
-    border-radius:14px;
-
-    background:
-        rgba(3,12,27,.72);
-
-    backdrop-filter:
-        blur(18px);
-
-    box-shadow:
-        0 12px 35px
-        rgba(0,0,0,.35);
-}
-
-
-.mode-button{
-    border:0;
-    border-radius:9px;
-
-    padding:
-        10px
-        14px;
-
-    color:
-        rgba(220,235,255,.65);
-
-    background:transparent;
-
-    font-size:11px;
-    font-weight:800;
-    letter-spacing:.08em;
-
-    transition:
-        background .25s ease,
-        color .25s ease,
-        transform .25s ease;
-}
-
-
-.mode-button:hover{
-    color:#fff;
-    transform:translateY(-1px);
-}
-
-
-.mode-button.active{
-    color:#fff;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(45,135,255,.42),
-            rgba(30,80,180,.3)
-        );
-
-    box-shadow:
-        inset
-        0 0 0 1px
-        rgba(100,185,255,.22);
-}
-
-
-/* =========================
-   MODE CONTENT
-========================= */
-
-.mode-content{
-    display:none;
-
-    animation:
-        modeIn
-        .35s
-        ease;
-}
-
-
-.mode-content.active{
-    display:block;
-}
-
-
-@keyframes modeIn{
-
-    from{
-        opacity:0;
-        transform:translateY(10px);
-    }
-
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-
-}
-
-
-/* =========================
-   HERO
-========================= */
-
-.hero{
-    text-align:center;
-
-    padding:
-        58px
-        10px
-        32px;
-}
-
-
-.hero h1{
-    margin:
-        18px
-        0
-        10px;
-
-    font-size:
-        clamp(
-            54px,
-            10vw,
-            104px
-        );
-
-    line-height:.86;
-    letter-spacing:-.055em;
-    font-weight:950;
-
-    text-shadow:
-        0
-        10px
-        50px
-        rgba(0,0,0,.55);
-}
-
-
-.hero h1 span{
-    display:block;
-
-    background:
-        linear-gradient(
-            180deg,
-            #fff 0%,
-            #8bd1ff 35%,
-            #398fff 100%
-        );
-
-    -webkit-background-clip:text;
-    background-clip:text;
-    -webkit-text-fill-color:transparent;
-}
-
-
-.hero p{
-    max-width:650px;
-
-    margin:
-        20px
-        auto
-        0;
-
-    color:
-        rgba(225,235,250,.78);
-
-    font-size:16px;
-    line-height:1.65;
-}
-
-
-.creator{
-    margin-top:16px;
-
-    color:
-        rgba(230,239,250,.78);
-
-    font-size:15px;
-}
-
-
-.creator strong{
-    color:#62b9ff;
-}
-
-
-/* =========================
-   MAIN BOX
-========================= */
-
-.box{
-    padding:30px;
-
-    border:
-        1px solid
-        rgba(85,165,255,.20);
-
-    border-radius:22px;
-
-    background:
-        rgba(3,15,31,.38);
-
-    box-shadow:
-        0
-        30px
-        80px
-        rgba(0,0,0,.28);
-
-    backdrop-filter:
-        blur(8px);
-}
-
-
-.box h2{
-    margin:
-        0
-        0
-        24px;
-
-    font-size:
-        clamp(
-            25px,
-            4vw,
-            34px
-        );
-}
-
-
-/* =========================
-   AI FORM
-========================= */
-
-.form-grid{
-    display:grid;
-
-    grid-template-columns:
-        repeat(3,1fr);
-
-    gap:18px;
-}
-
-
-.field label{
-    display:block;
-
-    margin-bottom:9px;
-
-    font-size:13px;
-    font-weight:700;
-}
-
-
-.field select,
-.field input{
-    width:100%;
-    min-height:50px;
-
-    padding:
-        0
-        15px;
-
-    border:
-        1px solid
-        rgba(90,165,245,.28);
-
-    border-radius:10px;
-
-    outline:none;
-
-    color:#f2f7ff;
-
-    background:
-        rgba(3,14,29,.72);
-
-    transition:
-        border-color .25s ease,
-        box-shadow .25s ease;
-}
-
-
-.field select:focus,
-.field input:focus{
-    border-color:
-        rgba(80,170,255,.65);
-
-    box-shadow:
-        0
-        0
-        20px
-        rgba(40,130,255,.08);
-}
-
-
-.field select option{
-    background:#071426;
-    color:#fff;
-}
-
-
-.favorites{
-    margin-top:23px;
-}
-
-
-.favorites-title{
-    margin-bottom:10px;
-
-    font-size:14px;
-    font-weight:700;
-}
-
-
-.favorite-grid{
-    display:grid;
-
-    grid-template-columns:
-        repeat(3,1fr);
-
-    gap:12px;
-}
-
-
-.find-button{
-    width:100%;
-
-    margin-top:25px;
-
-    padding:16px;
-
-    border:0;
-    border-radius:12px;
-
-    color:#fff;
-
-    font-weight:900;
-    letter-spacing:.08em;
-
-    background:
-        linear-gradient(
-            135deg,
-            #247fff,
-            #1749b8
-        );
-
-    box-shadow:
-        0
-        10px
-        35px
-        rgba(30,110,255,.25);
-
-    transition:
-        transform .25s ease,
-        box-shadow .25s ease;
-}
-
-
-.find-button:hover{
-    transform:translateY(-2px);
-
-    box-shadow:
-        0
-        14px
-        40px
-        rgba(30,110,255,.35);
-}
-
-
-.find-button:disabled{
-    opacity:.65;
-    cursor:wait;
-}
-
-
-/* =========================
-   RESULTS
-========================= */
-
-.results{
-    margin-top:30px;
-}
-
-
-.loading{
-    padding:50px;
-
-    text-align:center;
-
-    border:
-        1px solid
-        rgba(85,165,255,.2);
-
-    border-radius:18px;
-
-    background:
-        rgba(3,15,31,.48);
-
-    backdrop-filter:
-        blur(8px);
-}
-
-
-.spinner{
-    width:38px;
-    height:38px;
-
-    margin:
-        0
-        auto
-        15px;
-
-    border:
-        3px solid
-        rgba(255,255,255,.15);
-
-    border-top-color:#54aaff;
-
-    border-radius:50%;
-
-    animation:
-        spin
-        1s
-        linear
-        infinite;
-}
-
-
-@keyframes spin{
-
-    to{
-        transform:rotate(360deg);
-    }
-
-}
-
-
-.loading p{
-    color:
-        rgba(225,235,250,.72);
-
-    font-size:13px;
-    line-height:1.7;
-}
-
-
-/* =========================
-   MOVIE GRID
-========================= */
-
-.movie-grid{
-    display:grid;
-
-    grid-template-columns:
-        repeat(2,1fr);
-
-    gap:18px;
-}
-
-
-.movie-card{
-    display:flex;
-
-    gap:16px;
-
-    padding:15px;
-
-    min-height:180px;
-
-    border:
-        1px solid
-        rgba(90,165,255,.18);
-
-    border-radius:16px;
-
-    background:
-        rgba(3,15,31,.46);
-
-    backdrop-filter:
-        blur(7px);
-
-    box-shadow:
-        0
-        18px
-        45px
-        rgba(0,0,0,.22);
-
-    transition:
-        transform .28s ease,
-        border-color .28s ease,
-        box-shadow .28s ease;
-}
-
-
-.movie-card:hover{
-    transform:
-        translate3d(
-            0,
-            -4px,
-            0
-        );
-
-    border-color:
-        rgba(90,175,255,.42);
-
-    box-shadow:
-        0
-        18px
-        45px
-        rgba(0,0,0,.34),
-        0
-        0
-        28px
-        rgba(40,130,255,.08);
-}
-
-
-.movie-card img{
-    width:105px;
-    height:158px;
-
-    object-fit:cover;
-
-    border-radius:9px;
-
-    flex:none;
-
-    transition:
-        transform .4s
-        cubic-bezier(.2,.7,.2,1),
-        filter .4s ease;
-}
-
-
-.movie-card:hover img{
-    transform:scale(1.035);
-
-    filter:
-        brightness(1.05)
-        saturate(1.05);
-}
-
-
-.movie-info{
-    min-width:0;
-}
-
-
-.movie-info h3{
-    margin:
-        0
-        0
-        7px;
-
-    font-size:19px;
-}
-
-
-.movie-meta{
-    color:#70bfff;
-
-    font-size:13px;
-
-    margin-bottom:9px;
-}
-
-
-.movie-rating{
-    display:inline-block;
-
-    margin-bottom:9px;
-
-    padding:
-        4px
-        8px;
-
-    border-radius:6px;
-
-    background:
-        rgba(255,193,7,.12);
-
-    color:#ffd76a;
-
-    font-size:12px;
-    font-weight:800;
-}
-
-
-.movie-reason{
-    color:
-        rgba(225,235,250,.72);
-
-    font-size:13px;
-    line-height:1.5;
-}
-
-
-/* =========================
-   PANAYIOTIS' PICKS
-========================= */
-
-.picks-header{
-    display:flex;
-
-    align-items:flex-end;
-
-    justify-content:space-between;
-
-    gap:18px;
-
-    margin-bottom:30px;
-}
-
-
-.picks-title-group{
-    display:flex;
-
-    flex-direction:column;
-
-    align-items:flex-start;
-}
-
-
-.picks-header h2{
-    margin:0;
-
-    font-size:
-        clamp(
-            25px,
-            4vw,
-            34px
-        );
-
-    letter-spacing:-.025em;
-
-    text-shadow:
-        0
-        8px
-        30px
-        rgba(0,0,0,.48);
-}
-
-
-.picks-subtitle{
-    margin-top:13px;
-
-    color:
-        rgba(190,220,250,.48);
-
-    font-size:9px;
-
-    font-weight:800;
-
-    letter-spacing:.18em;
-
-    line-height:1.4;
-
-    text-transform:uppercase;
-}
-
-
-#pickCategory{
-    min-width:210px;
-
-    padding:
-        12px
-        14px;
-
-    border:
-        1px solid
-        rgba(90,165,245,.3);
-
-    border-radius:10px;
-
-    color:#fff;
-
-    background:
-        rgba(7,20,38,.72);
-
-    outline:none;
-
-    backdrop-filter:
-        blur(12px);
-}
-
-
-.picks-grid{
-    display:grid;
-
-    grid-template-columns:
-        repeat(2,1fr);
-
-    gap:18px;
-
-    perspective:1200px;
-
-    perspective-origin:
-        center center;
-}
-
-
-/* REMOVE THE LARGE BOX BEHIND PANAYIOTIS' MOVIES */
-
-#picksMode .box{
-    padding:0;
-
-    border:0;
-
-    border-radius:0;
-
-    background:transparent;
-
-    box-shadow:none;
-
-    backdrop-filter:none;
-}
-
-
-/* =========================
-   REAL 3-D MOVIE CARDS
-========================= */
-
-#picksMode .pick-card{
-
-    position:relative;
-
-    display:flex;
-
-    align-items:center;
-
-    gap:12px;
-
-    min-height:150px;
-
-    padding:12px;
-
-    border:
-        1px solid
-        rgba(90,165,255,.20);
-
-    border-radius:15px;
-
-    background:
-        rgba(3,15,31,.34);
-
-    backdrop-filter:
-        blur(3px);
-
-    box-shadow:
-        0
-        18px
-        45px
-        rgba(0,0,0,.28);
-
-    transform-style:preserve-3d;
-
-    transform:
-        perspective(900px)
-        rotateX(
-            var(--card-rotate-x,0deg)
-        )
-        rotateY(
-            var(--card-rotate-y,0deg)
-        )
-        translate3d(
-            var(--card-x,0px),
-            var(--card-y,0px),
-            0
-        );
-
-    transition:
-        transform .10s ease-out,
-        border-color .25s ease,
-        box-shadow .25s ease;
-
-    will-change:transform;
-}
-
-
-#picksMode .pick-card::before{
-
-    content:"";
-
-    position:absolute;
-
-    inset:0;
-
-    border-radius:15px;
-
-    pointer-events:none;
-
-    background:
-        radial-gradient(
-            circle at
-            var(--shine-x,50%)
-            var(--shine-y,50%),
-            rgba(120,205,255,.18),
-            transparent 35%
-        );
-
-    opacity:0;
-
-    transition:
-        opacity .2s ease;
-
-    z-index:5;
-}
-
-
-#picksMode .pick-card.is-3d::before{
-    opacity:1;
-}
-
-
-#picksMode .pick-card:hover{
-
-    border-color:
-        rgba(100,190,255,.58);
-
-    box-shadow:
-        0
-        28px
-        60px
-        rgba(0,0,0,.44),
-        0
-        0
-        38px
-        rgba(50,145,255,.14);
-}
-
-
-#picksMode .pick-card .pick-poster{
-
-    transform:
-        translate3d(
-            0,
-            0,
-            22px
-        )
-        scale(
-            var(--poster-scale,1)
-        );
-
-    transform-style:
-        preserve-3d;
-
-    box-shadow:
-        0
-        14px
-        30px
-        rgba(0,0,0,.42);
-
-    transition:
-        transform .10s ease-out,
-        filter .25s ease;
-}
-
-
-#picksMode .pick-card .pick-rank{
-    transform:
-        translateZ(32px);
-}
-
-
-#picksMode .pick-card .pick-info{
-    transform:
-        translateZ(26px);
-}
-
-
-#picksMode .pick-card .pick-rating{
-    transform:
-        translateZ(34px);
-}
-
-
-.pick-poster{
-
-    width:92px;
-    height:138px;
-
-    object-fit:cover;
-
-    border-radius:8px;
-
-    flex:none;
-
-    background:#071426;
-}
-
-
-.pick-poster-fallback{
-
-    display:flex;
-
-    align-items:flex-end;
-
-    justify-content:flex-start;
-
-    padding:10px;
-
-    color:
-        rgba(255,255,255,.88);
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(30,90,180,.8),
-            rgba(3,15,31,.95)
-        );
-
-    font-size:11px;
-
-    font-weight:800;
-
-    line-height:1.15;
-
-    text-align:left;
-}
-
-
-.pick-poster-fallback span{
-    display:block;
-}
-
-
-.pick-rank{
-
-    width:32px;
-    height:32px;
-
-    display:flex;
-
-    align-items:center;
-    justify-content:center;
-
-    flex:none;
-
-    border-radius:50%;
-
-    background:
-        rgba(45,135,255,.2);
-
-    color:#70bfff;
-
-    font-size:11px;
-
-    font-weight:900;
-}
-
-
-.pick-info{
-    min-width:0;
-    flex:1;
-}
-
-
-.pick-title{
-
-    margin:
-        0
-        0
-        5px;
-
-    font-size:16px;
-}
-
-
-.pick-year{
-
-    color:
-        rgba(220,235,255,.58);
-
-    font-size:12px;
-}
-
-
-.pick-tmdb{
-
-    display:inline-block;
-
-    margin-top:9px;
-
-    color:#70bfff;
-
-    font-size:11px;
-
-    text-decoration:none;
-
-    transition:
-        color .2s ease;
-}
-
-
-.pick-tmdb:hover{
-    color:#fff;
-}
-
-
-.pick-rating{
-
-    min-width:65px;
-
-    text-align:right;
-
-    color:#ffd76a;
-
-    font-size:13px;
-
-    font-weight:900;
-}
-
-
-/* =========================
-   ERROR
-========================= */
-
-.error-box{
-
-    padding:18px;
-
-    border-radius:12px;
-
-    background:
-        rgba(180,30,30,.18);
-
-    border:
-        1px solid
-        rgba(255,80,80,.25);
-
-    color:#ffb0b0;
-}
-
-
-/* =========================
-   TMDB
-========================= */
-
-.tmdb{
-
-    margin-top:40px;
-
-    text-align:center;
-
-    color:
-        rgba(220,235,255,.5);
-
-    font-size:11px;
-
-    line-height:1.5;
-}
-
-
-/* =========================
-   FOOTER
-========================= */
-
-.site-footer{
-
-    margin-top:65px;
-
-    padding:
-        30px
-        0
-        10px;
-
-    border-top:
-        1px solid
-        rgba(100,170,240,.14);
-
-    text-align:center;
-
-    color:
-        rgba(210,225,245,.48);
-
-    font-size:11px;
-
-    line-height:1.7;
-}
-
-
-.site-footer strong{
-
-    display:block;
-
-    margin-bottom:5px;
-
-    color:
-        rgba(235,245,255,.78);
-
-    font-size:12px;
-
-    letter-spacing:.14em;
-}
-
-
-/* =========================
-   MOBILE
-========================= */
-
-@media(max-width:800px){
-
-    .form-grid,
-    .favorite-grid,
-    .movie-grid,
-    .picks-grid{
-
-        grid-template-columns:1fr;
-    }
-
-
-    .picks-header{
-
-        align-items:stretch;
-
-        flex-direction:column;
-    }
-
-
-    #pickCategory{
-        width:100%;
-    }
-
-
-    .mode-switch{
-
-        position:relative;
-
-        top:auto;
-        left:auto;
-
-        width:max-content;
-
-        margin:
-            15px
-            auto
-            0;
-    }
-
-
-    .hero{
-        padding-top:30px;
-    }
-
-
-    .box{
-        padding:20px;
-    }
-
-
-    #picksMode .box{
-        padding:0;
-    }
-
-}
-
-
-/* =========================
-   SMALL MOBILE
-========================= */
-
-@media(max-width:500px){
-
-    .container{
-        width:
-            calc(100% - 20px);
-    }
-
-
-    .pick-card{
-        align-items:flex-start;
-    }
-
-
-    .pick-rating{
-        min-width:55px;
-    }
-
-
-    .pick-rank{
-
-        width:28px;
-        height:28px;
-    }
-
-
-    .movie-card{
-        padding:12px;
-    }
-
-
-    .movie-card img{
-
-        width:88px;
-        height:132px;
-    }
-
-}
-
-
-/* =========================
-   REDUCED MOTION
-========================= */
-
-@media(prefers-reduced-motion:reduce){
-
-    body:before{
-        transform:scale(1.07);
-        transition:none;
-    }
-
-
-    #picksMode .pick-card{
-
-        transform:none !important;
-
-        transition:none;
-    }
-
-
-    #picksMode .pick-card .pick-poster,
-    #picksMode .pick-card .pick-rank,
-    #picksMode .pick-card .pick-info,
-    #picksMode .pick-card .pick-rating{
-
-        transform:none !important;
-    }
-
-
-    .movie-card,
-    .movie-card img{
-
-        transition:none;
-    }
-
-}
-
+*{box-sizing:border-box}
+:root{--mx:50%;--my:50%;--bgx:0px;--bgy:0px}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;color:#fff;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#020711;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:-6%;z-index:-5;background:linear-gradient(180deg,rgba(1,5,14,.18),rgba(1,5,14,.48)),url("IMG_1106.png") center/cover no-repeat;transform:translate3d(var(--bgx),var(--bgy),0) scale(1.07);transition:filter .5s ease;will-change:transform}
+body::after{content:"";position:fixed;inset:0;z-index:-4;pointer-events:none;background:radial-gradient(circle at var(--mx) var(--my),rgba(90,170,255,.10),transparent 24%),linear-gradient(180deg,rgba(1,5,14,.05),rgba(1,5,14,.55) 72%,#020711 100%)}
+.ambient-grid{position:fixed;inset:0;z-index:-3;pointer-events:none;opacity:.16;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:70px 70px;mask-image:linear-gradient(to bottom,transparent,#000 25%,#000 75%,transparent)}
+.ambient-orb{position:fixed;width:36vw;height:36vw;border-radius:50%;z-index:-2;pointer-events:none;background:radial-gradient(circle,rgba(54,143,255,.14),transparent 68%);filter:blur(25px);animation:floatOrb 12s ease-in-out infinite alternate}
+.orb-one{top:8%;right:-10%} .orb-two{bottom:2%;left:-14%;animation-delay:-5s}
+@keyframes floatOrb{to{transform:translate3d(-35px,25px,0) scale(1.08)}}
+button,select,input{font:inherit}button{cursor:pointer}
+.container{width:min(1180px,calc(100% - 36px));margin:auto;padding:28px 0 80px}
+.mode-switch{position:sticky;top:16px;z-index:50;width:max-content;margin:0 auto 28px;display:flex;gap:5px;padding:6px;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:rgba(4,10,22,.58);backdrop-filter:blur(22px);box-shadow:0 18px 60px rgba(0,0,0,.28)}
+.mode-button{border:0;border-radius:999px;padding:11px 18px;color:rgba(230,240,255,.62);background:transparent;font-size:10px;font-weight:900;letter-spacing:.11em;transition:.3s ease}
+.mode-button:hover{color:#fff;background:rgba(255,255,255,.07)} .mode-button.active{color:#fff;background:linear-gradient(135deg,rgba(74,153,255,.75),rgba(27,74,180,.72));box-shadow:0 8px 25px rgba(34,117,255,.24),inset 0 0 0 1px rgba(255,255,255,.18)}
+.mode-content{display:none} .mode-content.active{display:block}
+.hero{min-height:76vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 10px 100px;position:relative}
+.hero::before{content:"";position:absolute;width:min(700px,80vw);height:260px;top:35%;background:radial-gradient(ellipse,rgba(38,125,255,.17),transparent 70%);filter:blur(20px);z-index:-1}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;padding:8px 13px;border:1px solid rgba(255,255,255,.15);border-radius:999px;background:rgba(5,12,25,.38);backdrop-filter:blur(12px);font-size:10px;font-weight:800;letter-spacing:.18em;color:rgba(235,243,255,.78);animation:fadeUp .9s both}
+.eyebrow i{width:6px;height:6px;border-radius:50%;background:#69b8ff;box-shadow:0 0 16px #69b8ff}
+.hero h1{margin:25px 0 16px;font-size:clamp(72px,13vw,170px);line-height:.76;letter-spacing:-.075em;font-weight:950;text-shadow:0 25px 80px rgba(0,0,0,.58);animation:heroIn 1s .1s both}
+.hero h1 span{display:block;background:linear-gradient(180deg,#fff 5%,#b7ddff 38%,#398cff 90%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{max-width:670px;margin:24px auto 0;color:rgba(234,241,252,.76);font-size:clamp(15px,2vw,19px);line-height:1.65;animation:fadeUp 1s .25s both}
+.creator{margin-top:18px;color:rgba(230,239,250,.64);font-size:13px;animation:fadeUp 1s .35s both} .creator strong{color:#72bcff}
+.scroll-cue{position:absolute;bottom:22px;display:flex;flex-direction:column;align-items:center;gap:8px;color:rgba(255,255,255,.45);font-size:9px;letter-spacing:.2em} .scroll-cue span{width:1px;height:38px;background:linear-gradient(#72bcff,transparent);animation:scrollLine 1.8s ease-in-out infinite}
+.section-kicker{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#72bcff;font-weight:900;margin-bottom:10px}
+.section-title{margin:0;font-size:clamp(30px,5vw,58px);letter-spacing:-.045em;line-height:1}
+.section-copy{max-width:620px;color:rgba(230,238,250,.65);line-height:1.65;margin:14px 0 0}
+.reveal{opacity:0;transform:translateY(34px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.75,.2,1);transition-delay:var(--delay,0ms)} .reveal.is-visible{opacity:1;transform:none}
+.glass-panel{position:relative;padding:34px;border:1px solid rgba(255,255,255,.13);border-radius:28px;background:linear-gradient(135deg,rgba(3,11,24,.60),rgba(4,13,28,.34));backdrop-filter:blur(18px);box-shadow:0 35px 100px rgba(0,0,0,.30),inset 0 1px rgba(255,255,255,.07)}
+.glass-panel::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(circle at var(--mx) var(--my),rgba(90,170,255,.08),transparent 35%)}
+.form-heading{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:28px} .form-heading h2{margin:0;font-size:32px;letter-spacing:-.04em}
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.field label{display:block;margin-bottom:9px;font-size:10px;font-weight:900;letter-spacing:.13em;text-transform:uppercase;color:rgba(230,240,255,.65)}
+.field select,.field input{width:100%;min-height:54px;padding:0 16px;border:1px solid rgba(116,174,235,.19);border-radius:14px;outline:none;color:#f2f7ff;background:rgba(1,8,19,.58);box-shadow:inset 0 1px rgba(255,255,255,.04);transition:.25s ease}
+.field select:focus,.field input:focus{border-color:rgba(100,180,255,.65);box-shadow:0 0 0 4px rgba(65,143,255,.10),inset 0 1px rgba(255,255,255,.08)} .field select option{background:#071426;color:#fff}
+.favorites{margin-top:24px} .favorites-title{margin-bottom:10px;font-size:11px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:rgba(230,240,255,.65)} .favorite-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.find-button{position:relative;overflow:hidden;width:100%;margin-top:24px;padding:17px;border:0;border-radius:14px;color:#fff;font-weight:950;letter-spacing:.13em;background:linear-gradient(110deg,#237dff,#2e5dcc 45%,#168cff);box-shadow:0 15px 40px rgba(25,111,255,.24);transition:transform .25s ease,box-shadow .25s ease}
+.find-button::before{content:"";position:absolute;inset:-60% -20%;background:linear-gradient(100deg,transparent 38%,rgba(255,255,255,.35),transparent 62%);transform:translateX(-100%);animation:buttonSweep 3.8s ease-in-out infinite} .find-button:hover{box-shadow:0 20px 55px rgba(25,111,255,.35)} .find-button:disabled{opacity:.65;cursor:wait}
+.results{margin-top:80px} .results>h2{font-size:30px;letter-spacing:-.04em} .loading{padding:50px;text-align:center;border:1px solid rgba(255,255,255,.11);border-radius:22px;background:rgba(3,11,24,.45);backdrop-filter:blur(15px)}
+.spinner{width:42px;height:42px;margin:0 auto 16px;border:2px solid rgba(255,255,255,.13);border-top-color:#61b4ff;border-right-color:#277cff;border-radius:50%;animation:spin 1s linear infinite;box-shadow:0 0 28px rgba(50,140,255,.2)}
+.movie-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.movie-card{position:relative;display:flex;gap:17px;min-height:190px;padding:14px;border:1px solid rgba(255,255,255,.12);border-radius:20px;background:rgba(3,11,24,.52);backdrop-filter:blur(12px);box-shadow:0 25px 55px rgba(0,0,0,.28);overflow:hidden;transform-style:preserve-3d;transition:.35s ease} .movie-card::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 20% 20%,rgba(92,171,255,.12),transparent 32%);pointer-events:none} .movie-card:hover{transform:translateY(-7px);border-color:rgba(112,190,255,.36);box-shadow:0 35px 75px rgba(0,0,0,.38)} .movie-card img{width:110px;height:162px;object-fit:cover;border-radius:11px;flex:none;box-shadow:0 18px 35px rgba(0,0,0,.4);transition:.45s cubic-bezier(.2,.8,.2,1)} .movie-card:hover img{transform:translateZ(22px) scale(1.035)} .movie-info{min-width:0;position:relative;z-index:2;align-self:center} .movie-info h3{margin:0 0 7px;font-size:19px} .movie-meta{color:#70bfff;font-size:12px;margin-bottom:9px} .movie-rating{display:inline-block;margin-bottom:9px;padding:5px 9px;border-radius:999px;background:rgba(255,193,7,.11);color:#ffd76a;font-size:11px;font-weight:900} .movie-reason{color:rgba(225,235,250,.67);font-size:13px;line-height:1.55}
+.picks-section{padding-top:55px} .picks-top{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:35px} .category-select{min-width:220px;padding:14px 16px;border:1px solid rgba(255,255,255,.15);border-radius:14px;color:#fff;background:rgba(3,11,24,.58);backdrop-filter:blur(14px);outline:none}
+#picksMode .box{padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;backdrop-filter:none}
+.picks-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;perspective:1500px}
+.pick-card{--rx:0deg;--ry:0deg;--px:0px;--py:0px;position:relative;display:flex;align-items:center;gap:14px;min-height:168px;padding:13px;border:1px solid rgba(255,255,255,.13);border-radius:21px;background:linear-gradient(135deg,rgba(3,12,26,.56),rgba(2,9,20,.30));backdrop-filter:blur(9px);box-shadow:0 24px 55px rgba(0,0,0,.27);transform-style:preserve-3d;transform:perspective(1000px) rotateX(var(--rx)) rotateY(var(--ry)) translate3d(var(--px),var(--py),0);transition:transform .16s ease-out,border-color .3s ease,box-shadow .3s ease;overflow:hidden;will-change:transform}
+.pick-card::before{content:"";position:absolute;inset:-20%;pointer-events:none;background:radial-gradient(circle at var(--shine-x,50%) var(--shine-y,50%),rgba(105,187,255,.18),transparent 24%);opacity:.55;transition:opacity .3s ease} .pick-card::after{content:"";position:absolute;top:-120%;left:-40%;width:45%;height:340%;transform:rotate(25deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.10),transparent);opacity:0;transition:opacity .3s ease,left .7s ease;pointer-events:none} .pick-card:hover::after{left:115%;opacity:1} .pick-card.tilting{border-color:rgba(104,185,255,.40);box-shadow:0 38px 90px rgba(0,0,0,.42),0 0 45px rgba(45,137,255,.10)}
+.pick-poster{width:100px;height:146px;object-fit:cover;border-radius:10px;flex:none;background:#071426;box-shadow:0 20px 35px rgba(0,0,0,.42);transform:translate3d(0,0,34px) scale(1);transition:transform .25s ease;position:relative;z-index:2} .pick-card.tilting .pick-poster{transform:translate3d(0,0,52px) scale(1.045)} .pick-rank{width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex:none;border:1px solid rgba(105,187,255,.22);border-radius:50%;background:rgba(35,111,220,.18);color:#7ac4ff;font-size:10px;font-weight:950;transform:translateZ(45px)} .pick-info{min-width:0;flex:1;position:relative;z-index:3;transform:translateZ(35px)} .pick-title{margin:0 0 5px;font-size:17px;line-height:1.2} .pick-year{color:rgba(220,235,255,.55);font-size:12px} .pick-tmdb{display:inline-block;margin-top:10px;color:#72bcff;font-size:10px;font-weight:800;letter-spacing:.08em;text-decoration:none} .pick-rating{min-width:66px;text-align:right;color:#ffd76a;font-size:12px;font-weight:950;transform:translateZ(48px);position:relative;z-index:3}
+.tmdb{margin-top:80px;text-align:center;color:rgba(220,235,255,.42);font-size:10px;letter-spacing:.02em}
+.error-box{padding:18px;border-radius:16px;background:rgba(180,30,30,.16);border:1px solid rgba(255,80,80,.24);color:#ffb0b0}
+@keyframes spin{to{transform:rotate(360deg)}} @keyframes heroIn{from{opacity:0;transform:translateY(35px) scale(.96);filter:blur(8px)}to{opacity:1;transform:none;filter:none}} @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}} @keyframes scrollLine{0%,100%{opacity:.3;transform:scaleY(.65)}50%{opacity:1;transform:scaleY(1)}} @keyframes buttonSweep{0%,55%{transform:translateX(-100%)}75%,100%{transform:translateX(140%)}}
+@media(max-width:800px){.container{width:calc(100% - 22px)}.hero{min-height:70vh;padding-top:50px}.form-grid,.favorite-grid,.movie-grid,.picks-grid{grid-template-columns:1fr}.form-heading,.picks-top{align-items:stretch;flex-direction:column}.glass-panel{padding:22px;border-radius:22px}.mode-switch{max-width:calc(100vw - 22px);overflow:auto}.mode-button{white-space:nowrap}.pick-card{min-height:155px}}
+@media(max-width:520px){.hero h1{font-size:clamp(62px,22vw,105px)}.hero p{font-size:14px}.pick-poster{width:82px;height:122px}.pick-rank{width:29px;height:29px}.pick-rating{min-width:48px;font-size:11px}.movie-card{min-height:0}.movie-card img{width:88px;height:132px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.001ms!important}body::before{transform:scale(1.02)}}
 </style>
 </head>
-
-
 <body>
-
-<div class="cinematic-depth-glow"></div>
-
-
-<!-- =========================
-     MODE SWITCH
-========================= -->
-
-<div class="mode-switch">
-
-    <button
-        class="mode-button active"
-        id="aiModeButton"
-        type="button"
-    >
-        AI RECOMMENDER
-    </button>
-
-    <button
-        class="mode-button"
-        id="picksModeButton"
-        type="button"
-    >
-        PANAYIOTIS' PICKS
-    </button>
-
-</div>
-
-
-<main class="container">
-
-
-<!-- =========================
-     HERO
-========================= -->
-
+<div class="ambient-grid"></div><div class="ambient-orb orb-one"></div><div class="ambient-orb orb-two"></div>
+<div class="container">
+<nav class="mode-switch">
+<button class="mode-button active" id="aiModeButton" type="button">AI RECOMMENDER</button>
+<button class="mode-button" id="picksModeButton" type="button">PANAYIOTIS' PICKS</button>
+</nav>
 <section class="hero">
-
-    <h1>
-        MOVIE
-        <span>MIND</span>
-    </h1>
-
-    <p>
-        Discover movies that match your taste,
-        powered by TMDB and AI.
-    </p>
-
-    <div class="creator">
-        Created by
-        <strong>
-            Panayiotis Kouzaris
-        </strong>
-    </div>
-
+<div class="eyebrow"><i></i> AI-POWERED MOVIE DISCOVERY</div>
+<h1>MOVIE<span>MIND</span></h1>
+<p>Discover your next obsession through a cinematic recommendation engine built around your taste.</p>
+<div class="creator">Created by <strong>Panayiotis Kouzaris</strong></div>
+<div class="scroll-cue">EXPLORE<span></span></div>
 </section>
-
-
-<!-- =========================
-     AI RECOMMENDER
-========================= -->
-
-<section
-    id="aiMode"
-    class="mode-content active"
->
-
-    <div class="box">
-
-        <h2>
-            Find Your Movies
-        </h2>
-
-        <div class="form-grid">
-
-            <div class="field">
-
-                <label for="genre">
-                    Genre
-                </label>
-
-                <select id="genre">
-
-                    <option value="science fiction">
-                        Science Fiction
-                    </option>
-
-                    <option value="thriller">
-                        Thriller
-                    </option>
-
-                    <option value="action">
-                        Action
-                    </option>
-
-                    <option value="drama">
-                        Drama
-                    </option>
-
-                    <option value="comedy">
-                        Comedy
-                    </option>
-
-                    <option value="horror">
-                        Horror
-                    </option>
-
-                    <option value="romance">
-                        Romance
-                    </option>
-
-                    <option value="mystery">
-                        Mystery
-                    </option>
-
-                    <option value="adventure">
-                        Adventure
-                    </option>
-
-                    <option value="fantasy">
-                        Fantasy
-                    </option>
-
-                    <option value="any">
-                        Any
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div class="field">
-
-                <label for="period">
-                    Release Period
-                </label>
-
-                <select id="period">
-
-                    <option value="2020-2027">
-                        2020–2027
-                    </option>
-
-                    <option value="2010-2020">
-                        2010–2020
-                    </option>
-
-                    <option value="2000-2010">
-                        2000–2010
-                    </option>
-
-                    <option value="1990-2000">
-                        1990–2000
-                    </option>
-
-                    <option value="1980-1990">
-                        1980–1990
-                    </option>
-
-                    <option value="before-1980">
-                        Before 1980
-                    </option>
-
-                    <option value="any">
-                        Any
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div class="field">
-
-                <label for="plotTwist">
-                    Plot Twist
-                </label>
-
-                <select id="plotTwist">
-
-                    <option value="yes">
-                        Yes
-                    </option>
-
-                    <option value="no">
-                        No
-                    </option>
-
-                    <option value="any">
-                        Any
-                    </option>
-
-                </select>
-
-            </div>
-
-        </div>
-
-
-        <div class="favorites">
-
-            <div class="favorites-title">
-                Favorite Movies — up to 3
-            </div>
-
-            <div class="favorite-grid">
-
-                <div class="field">
-
-                    <input
-                        id="favorite1"
-                        placeholder="Movie title"
-                    >
-
-                </div>
-
-                <div class="field">
-
-                    <input
-                        id="favorite2"
-                        placeholder="Movie title"
-                    >
-
-                </div>
-
-                <div class="field">
-
-                    <input
-                        id="favorite3"
-                        placeholder="Movie title"
-                    >
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <button
-            class="find-button"
-            id="recommendButton"
-            type="button"
-        >
-            FIND MY MOVIES
-        </button>
-
-    </div>
-
-
-    <section
-        class="results"
-        id="results"
-        style="display:none"
-    >
-
-        <h2>
-            Your AI Recommendations
-        </h2>
-
-
-        <div
-            id="loading"
-            class="loading"
-            style="display:none"
-        >
-
-            <div class="spinner"></div>
-
-            <p>
-                MovieMind AI is analyzing your preferences...
-                <br>
-                Finding cinematic matches...
-                <br>
-                Building your recommendations...
-            </p>
-
-        </div>
-
-
-        <div
-            id="movieResults"
-            class="movie-grid"
-            style="display:none"
-        ></div>
-
-    </section>
-
-</section>
-
-
-<!-- =========================
-     PANAYIOTIS' PICKS
-========================= -->
-
-<section
-    id="picksMode"
-    class="mode-content"
->
-
-    <div class="box">
-
-        <div class="picks-header">
-
-            <div class="picks-title-group">
-
-                <h2 id="picksTitle">
-                    Science Fiction
-                </h2>
-
-                <div class="picks-subtitle">
-                    Personal Letterboxd selection
-                </div>
-
-            </div>
-
-
-            <select id="pickCategory">
-
-                <option value="science-fiction">
-                    Science Fiction
-                </option>
-
-                <option value="thriller">
-                    Thriller
-                </option>
-
-                <option value="action">
-                    Action
-                </option>
-
-                <option value="drama">
-                    Drama
-                </option>
-
-                <option value="comedy">
-                    Comedy
-                </option>
-
-                <option value="horror">
-                    Horror
-                </option>
-
-                <option value="romance">
-                    Romance
-                </option>
-
-                <option value="mystery">
-                    Mystery
-                </option>
-
-                <option value="adventure">
-                    Adventure
-                </option>
-
-                <option value="fantasy">
-                    Fantasy
-                </option>
-
-            </select>
-
-        </div>
-
-
-        <div
-            id="picksGrid"
-            class="picks-grid"
-        ></div>
-
-    </div>
-
-</section>
-
-
-<div class="tmdb">
-
-    This product uses the TMDB API
-    but is not endorsed or certified by TMDB.
-
+<section id="aiMode" class="mode-content active">
+<div class="glass-panel reveal">
+<div class="form-heading"><div><div class="section-kicker">Movie intelligence</div><h2>Find Your Movies</h2></div><div class="section-copy">Tell MovieMind what you like. AI combines your choices with TMDB to discover films worth watching.</div></div>
+<div class="form-grid">
+<div class="field"><label for="genre">Genre</label><select id="genre"><option value="science fiction">Science Fiction</option><option value="thriller">Thriller</option><option value="action">Action</option><option value="drama">Drama</option><option value="comedy">Comedy</option><option value="horror">Horror</option><option value="romance">Romance</option><option value="mystery">Mystery</option><option value="adventure">Adventure</option><option value="fantasy">Fantasy</option><option value="any">Any</option></select></div>
+<div class="field"><label for="period">Release Period</label><select id="period"><option value="2020-2027">2020–2027</option><option value="2010-2020">2010–2020</option><option value="2000-2010">2000–2010</option><option value="1990-2000">1990–2000</option><option value="1980-1990">1980–1990</option><option value="before-1980">Before 1980</option><option value="any">Any</option></select></div>
+<div class="field"><label for="plotTwist">Plot Twist</label><select id="plotTwist"><option value="yes">Yes</option><option value="no">No</option><option value="any">Any</option></select></div>
 </div>
-
-
-<footer class="site-footer">
-
-    <strong>
-        MOVIEMIND
-    </strong>
-
-    AI-powered movie discovery
-    ·
-    Created by Panayiotis Kouzaris
-
-    <br>
-
-    © 2026 MovieMind
-
-</footer>
-
-
-</main>
-
-
-<script src="./panayiotis-picks.js"></script>
-
-
+<div class="favorites"><div class="favorites-title">Favorite Movies — up to 3</div><div class="favorite-grid"><div class="field"><input id="favorite1" placeholder="Movie title"></div><div class="field"><input id="favorite2" placeholder="Movie title"></div><div class="field"><input id="favorite3" placeholder="Movie title"></div></div></div>
+<button class="find-button magnetic" id="recommendButton" type="button">FIND MY MOVIES</button>
+</div>
+<section class="results" id="results" style="display:none"><h2 class="reveal">Your AI Recommendations</h2><div id="loading" class="loading" style="display:none"><div class="spinner"></div><p>MovieMind is searching the stars...</p></div><div id="movieResults" class="movie-grid" style="display:none"></div></section>
+</section>
+<section id="picksMode" class="mode-content picks-section">
+<div class="picks-top reveal"><div><div class="section-kicker">Curated by Panayiotis</div><h2 id="picksTitle" class="section-title">Science Fiction</h2><p class="section-copy">Personal Letterboxd selections, presented as a cinematic collection.</p></div><select id="pickCategory" class="category-select"><option value="science-fiction">Science Fiction</option><option value="thriller">Thriller</option><option value="action">Action</option><option value="drama">Drama</option><option value="comedy">Comedy</option><option value="horror">Horror</option><option value="romance">Romance</option><option value="mystery">Mystery</option><option value="adventure">Adventure</option><option value="fantasy">Fantasy</option></select></div>
+<div id="picksGrid" class="picks-grid"></div>
+</section>
+<div class="tmdb">This product uses the TMDB API but is not endorsed or certified by TMDB.</div>
+</div>
 <script>
 
 const API_URL =
@@ -1808,16 +109,25 @@ const API_URL =
 
 const PICK_GENRES = {
 
-    "science-fiction":878,
-    "thriller":53,
-    "action":28,
-    "drama":18,
-    "comedy":35,
-    "horror":27,
-    "romance":10749,
-    "mystery":9648,
-    "adventure":12,
-    "fantasy":14
+    "science-fiction": 878,
+
+    "thriller": 53,
+
+    "action": 28,
+
+    "drama": 18,
+
+    "comedy": 35,
+
+    "horror": 27,
+
+    "romance": 10749,
+
+    "mystery": 9648,
+
+    "adventure": 12,
+
+    "fantasy": 14
 
 };
 
@@ -1857,6 +167,9 @@ const PICK_GENRE_NAMES = {
 };
 
 
+const PANAYIOTIS_CATALOG = window.PANAYIOTIS_CATALOG;
+
+
 /* =========================
    MODE SWITCH
 ========================= */
@@ -1866,18 +179,15 @@ const aiButton =
         "aiModeButton"
     );
 
-
 const picksButton =
     document.getElementById(
         "picksModeButton"
     );
 
-
 const aiMode =
     document.getElementById(
         "aiMode"
     );
-
 
 const picksMode =
     document.getElementById(
@@ -1896,7 +206,6 @@ function showMode(mode){
         !picks
     );
 
-
     picksMode.classList.toggle(
         "active",
         picks
@@ -1907,7 +216,6 @@ function showMode(mode){
         "active",
         !picks
     );
-
 
     picksButton.classList.toggle(
         "active",
@@ -1989,7 +297,6 @@ async function findMovies(){
             await fetch(
                 API_URL,
                 {
-
                     method:"POST",
 
                     headers:{
@@ -2152,9 +459,6 @@ async function findMovies(){
 
     }catch(e){
 
-        console.error(e);
-
-
         out.innerHTML = `
 
             <div
@@ -2163,19 +467,15 @@ async function findMovies(){
                     grid-column:1/-1
                 "
             >
-
                 ${escapeHtml(
                     e.message
                 )}
-
             </div>
 
         `;
 
-
         out.style.display =
             "grid";
-
 
     }finally{
 
@@ -2207,195 +507,15 @@ document
    LOAD PANAYIOTIS' CATALOG
 ========================= */
 
-function loadPanayiotisCatalog(){
+async function loadPanayiotisCatalog(){
 
-    if(
-        !window.PANAYIOTIS_CATALOG ||
-        !Array.isArray(
-            window.PANAYIOTIS_CATALOG.movies
-        )
-    ){
-
-        throw new Error(
-            "The local Panayiotis' Picks catalog could not be loaded."
-        );
-
+    if(!PANAYIOTIS_CATALOG){
+        throw new Error("Panayiotis' Picks catalog could not be loaded.");
     }
 
-
-    return window.PANAYIOTIS_CATALOG;
-
-}
-
-
-/* =========================
-   3-D CARD EFFECT
-========================= */
-
-function init3DCardEffects(){
-
-    const cards =
-        document.querySelectorAll(
-            "#picksMode .pick-card"
-        );
-
-
-    if(
-        !window.matchMedia(
-            "(pointer:fine)"
-        ).matches
-    ){
-
-        return;
-
-    }
-
-
-    cards.forEach(card => {
-
-        card.addEventListener(
-            "mousemove",
-            event => {
-
-                const rect =
-                    card.getBoundingClientRect();
-
-
-                const x =
-                    event.clientX -
-                    rect.left;
-
-
-                const y =
-                    event.clientY -
-                    rect.top;
-
-
-                const percentX =
-                    (x / rect.width) - .5;
-
-
-                const percentY =
-                    (y / rect.height) - .5;
-
-
-                const rotateY =
-                    percentX * 10;
-
-
-                const rotateX =
-                    percentY * -10;
-
-
-                const moveX =
-                    percentX * 4;
-
-
-                const moveY =
-                    percentY * 4;
-
-
-                card.style.setProperty(
-                    "--card-rotate-x",
-                    `${rotateX.toFixed(2)}deg`
-                );
-
-
-                card.style.setProperty(
-                    "--card-rotate-y",
-                    `${rotateY.toFixed(2)}deg`
-                );
-
-
-                card.style.setProperty(
-                    "--card-x",
-                    `${moveX.toFixed(2)}px`
-                );
-
-
-                card.style.setProperty(
-                    "--card-y",
-                    `${moveY.toFixed(2)}px`
-                );
-
-
-                card.style.setProperty(
-                    "--shine-x",
-                    `${(percentX + .5) * 100}%`
-                );
-
-
-                card.style.setProperty(
-                    "--shine-y",
-                    `${(percentY + .5) * 100}%`
-                );
-
-
-                card.style.setProperty(
-                    "--poster-scale",
-                    "1.025"
-                );
-
-
-                card.classList.add(
-                    "is-3d"
-                );
-
-            },
-            {
-                passive:true
-            }
-        );
-
-
-        card.addEventListener(
-            "mouseleave",
-            () => {
-
-                card.style.setProperty(
-                    "--card-rotate-x",
-                    "0deg"
-                );
-
-
-                card.style.setProperty(
-                    "--card-rotate-y",
-                    "0deg"
-                );
-
-
-                card.style.setProperty(
-                    "--card-x",
-                    "0px"
-                );
-
-
-                card.style.setProperty(
-                    "--card-y",
-                    "0px"
-                );
-
-
-                card.style.setProperty(
-                    "--poster-scale",
-                    "1"
-                );
-
-
-                card.classList.remove(
-                    "is-3d"
-                );
-
-            },
-            {
-                passive:true
-            }
-        );
-
-    });
+    return PANAYIOTIS_CATALOG;
 
 }
-
 
 /* =========================
    DISPLAY PANAYIOTIS' PICKS
@@ -2422,43 +542,60 @@ async function displayPicks(){
 
 
     title.textContent =
-        PICK_GENRE_NAMES[category];
+        PICK_GENRE_NAMES[
+            category
+        ];
 
 
     try{
 
         const catalog =
-            loadPanayiotisCatalog();
+            await loadPanayiotisCatalog();
 
 
-        const movieMap =
-            new Map(
-                catalog.movies.map(
-                    movie => [
-                        movie.title,
-                        movie
-                    ]
-                )
+        /*
+         * IMPORTANT:
+         *
+         * ALL Letterboxd movies are used.
+         *
+         * There is NO Top 100 limit.
+         */
+
+        /*
+         * The 10 movies in each category are
+         * the confirmed Letterboxd selections.
+         *
+         * A movie can appear in multiple categories.
+         */
+
+        let movies =
+            catalog.filter(
+                movie =>
+                    Array.isArray(
+                        movie.categories
+                    )
+                    &&
+                    movie.categories.includes(
+                        category
+                    )
             );
 
 
-        const orderedTitles =
-            catalog.categories[
-                category
-            ] || [];
+        /*
+         * Always keep the confirmed Letterboxd
+         * order and display exactly 10.
+         */
+
+        movies =
+            movies.slice(
+                0,
+                10
+            );
 
 
-        const movies =
-            orderedTitles
-                .map(
-                    title =>
-                        movieMap.get(title)
-                )
-                .filter(Boolean)
-                .slice(0,10);
-
-
-        if(!movies.length){
+        if(
+            !movies.length
+        ){
 
             grid.innerHTML = `
 
@@ -2468,8 +605,8 @@ async function displayPicks(){
                         grid-column:1/-1
                     "
                 >
-                    No movies were found
-                    in this category.
+                    No rated movies were
+                    found in this category.
                 </div>
 
             `;
@@ -2483,6 +620,7 @@ async function displayPicks(){
             movies
                 .map(
                     (movie,index) => {
+
 
                         const poster =
                             movie.poster_path
@@ -2504,20 +642,8 @@ async function displayPicks(){
 
                             `
                             <div
-                                class="
-                                    pick-poster
-                                    pick-poster-fallback
-                                "
-                                aria-label="${escapeAttr(
-                                    movie.title
-                                )}"
-                            >
-                                <span>
-                                    ${escapeHtml(
-                                        movie.title
-                                    )}
-                                </span>
-                            </div>
+                                class="pick-poster"
+                            ></div>
                             `;
 
 
@@ -2607,11 +733,6 @@ async function displayPicks(){
                 .join("");
 
 
-        requestAnimationFrame(
-            init3DCardEffects
-        );
-
-
     }catch(e){
 
         console.error(e);
@@ -2653,136 +774,89 @@ document
         displayPicks
     );
 
-
 displayPicks();
 
 
+
 /* =========================
-   CINEMATIC BACKGROUND PARALLAX
+   PREMIUM MOTION SYSTEM
 ========================= */
 
-(function initCinematicParallax(){
+function initRevealAnimations(){
+    const items=document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window)){ items.forEach(el=>el.classList.add('is-visible')); return; }
+    const observer=new IntersectionObserver(entries=>{
+        entries.forEach(entry=>{
+            if(entry.isIntersecting){ entry.target.classList.add('is-visible'); observer.unobserve(entry.target); }
+        });
+    },{threshold:.12,rootMargin:'0px 0px -50px'});
+    items.forEach(el=>observer.observe(el));
+}
 
-    const root =
-        document.documentElement;
-
-
-    let targetX = 0;
-    let targetY = 0;
-
-    let currentX = 0;
-    let currentY = 0;
-
-
-    const maxMove = 16;
-
-
-    function updateTarget(
-        clientX,
-        clientY
-    ){
-
-        const x =
-            (
-                clientX /
-                window.innerWidth
-            ) - .5;
-
-
-        const y =
-            (
-                clientY /
-                window.innerHeight
-            ) - .5;
-
-
-        targetX =
-            -x * maxMove;
-
-
-        targetY =
-            -y * maxMove;
-
+function initAmbientMotion(){
+    const root=document.documentElement;
+    let tx=0,ty=0,cx=0,cy=0;
+    if(window.matchMedia('(pointer:fine)').matches){
+        window.addEventListener('mousemove',e=>{
+            tx=(e.clientX/window.innerWidth-.5)*-18;
+            ty=(e.clientY/window.innerHeight-.5)*-12;
+            root.style.setProperty('--mx',`${(e.clientX/window.innerWidth)*100}%`);
+            root.style.setProperty('--my',`${(e.clientY/window.innerHeight)*100}%`);
+        },{passive:true});
     }
-
-
-    function animate(){
-
-        currentX +=
-            (
-                targetX -
-                currentX
-            ) * .055;
-
-
-        currentY +=
-            (
-                targetY -
-                currentY
-            ) * .055;
-
-
-        root.style.setProperty(
-            "--bg-x",
-            `${currentX.toFixed(2)}px`
-        );
-
-
-        root.style.setProperty(
-            "--bg-y",
-            `${currentY.toFixed(2)}px`
-        );
-
-
-        requestAnimationFrame(
-            animate
-        );
-
+    function frame(){
+        cx+=(tx-cx)*.045; cy+=(ty-cy)*.045;
+        root.style.setProperty('--bgx',`${cx.toFixed(2)}px`);
+        root.style.setProperty('--bgy',`${cy.toFixed(2)}px`);
+        requestAnimationFrame(frame);
     }
+    frame();
+}
 
+function addTilt(card){
+    if(!window.matchMedia('(pointer:fine)').matches) return;
+    card.addEventListener('pointermove',e=>{
+        const r=card.getBoundingClientRect();
+        const x=(e.clientX-r.left)/r.width-.5;
+        const y=(e.clientY-r.top)/r.height-.5;
+        card.style.setProperty('--rx',`${(-y*8).toFixed(2)}deg`);
+        card.style.setProperty('--ry',`${(x*9).toFixed(2)}deg`);
+        card.style.setProperty('--px',`${(x*5).toFixed(2)}px`);
+        card.style.setProperty('--py',`${(y*5).toFixed(2)}px`);
+        card.style.setProperty('--shine-x',`${(x+.5)*100}%`);
+        card.style.setProperty('--shine-y',`${(y+.5)*100}%`);
+        card.classList.add('tilting');
+    });
+    card.addEventListener('pointerleave',()=>{
+        card.style.setProperty('--rx','0deg'); card.style.setProperty('--ry','0deg');
+        card.style.setProperty('--px','0px'); card.style.setProperty('--py','0px');
+        card.classList.remove('tilting');
+    });
+}
 
-    if(
-        window.matchMedia(
-            "(pointer:fine)"
-        ).matches
-    ){
+const originalDisplayPicks=displayPicks;
+displayPicks=async function(){
+    await originalDisplayPicks();
+    document.querySelectorAll('#picksMode .pick-card').forEach(addTilt);
+    document.querySelectorAll('#picksMode .pick-card').forEach((el,i)=>{ el.style.setProperty('--delay',`${i*45}ms`); el.classList.add('reveal','is-visible'); });
+};
 
-        window.addEventListener(
-            "mousemove",
-            event => {
+function initMagneticButtons(){
+    document.querySelectorAll('.magnetic').forEach(button=>{
+        if(!window.matchMedia('(pointer:fine)').matches) return;
+        button.addEventListener('pointermove',e=>{
+            const r=button.getBoundingClientRect();
+            const x=(e.clientX-r.left-r.width/2)*.12;
+            const y=(e.clientY-r.top-r.height/2)*.12;
+            button.style.transform=`translate(${x}px,${y}px)`;
+        });
+        button.addEventListener('pointerleave',()=>button.style.transform='');
+    });
+}
 
-                updateTarget(
-                    event.clientX,
-                    event.clientY
-                );
-
-            },
-            {
-                passive:true
-            }
-        );
-
-
-        window.addEventListener(
-            "mouseleave",
-            () => {
-
-                targetX = 0;
-                targetY = 0;
-
-            },
-            {
-                passive:true
-            }
-        );
-
-    }
-
-
-    animate();
-
-})();
-
+initRevealAnimations();
+initAmbientMotion();
+initMagneticButtons();
 
 /* =========================
    SECURITY HELPERS
@@ -2793,27 +867,22 @@ function escapeHtml(v){
     return String(
         v ?? ""
     )
-
     .replace(
         /&/g,
         "&amp;"
     )
-
     .replace(
         /</g,
         "&lt;"
     )
-
     .replace(
         />/g,
         "&gt;"
     )
-
     .replace(
         /"/g,
         "&quot;"
     )
-
     .replace(
         /'/g,
         "&#039;"
@@ -2827,22 +896,18 @@ function escapeAttr(v){
     return String(
         v ?? ""
     )
-
     .replace(
         /&/g,
         "&amp;"
     )
-
     .replace(
         /"/g,
         "&quot;"
     )
-
     .replace(
         /</g,
         "&lt;"
     )
-
     .replace(
         />/g,
         "&gt;"
@@ -2851,6 +916,4 @@ function escapeAttr(v){
 }
 
 </script>
-
-</body>
-</html>
+</body></html>
